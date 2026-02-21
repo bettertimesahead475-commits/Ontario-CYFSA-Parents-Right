@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ontario Parent Defense — Free Legal Information for Families Facing CAS</title>
+  <meta name="description" content="Ontario's #1 free legal information resource for parents facing Children's Aid Society (CAS) involvement. AI case analyzer, Charter rights, CYFSA law, emergency protocols.">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── HERO ── */
+    .home-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #0f2a55 50%, var(--navy-mid) 100%);
+      color: #fff; padding: 80px 24px 72px; text-align: center; position: relative; overflow: hidden;
+    }
+    .home-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.018'%3E%3Cpath d='M50 50v-5h-3v5h-5v3h5v5h3v-5h5v-3h-5zm0-40V5h-3v5h-5v3h5v5h3v-5h5V5h-5zM10 50v-5H7v5H2v3h5v5h3v-5h5v-3h-5zM10 10V5H7v5H2v3h5v5h3v-5h5V5h-5z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .home-hero-inner { max-width: 800px; margin: 0 auto; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(212,160,68,.15); border: 1px solid rgba(212,160,68,.35);
+      color: var(--gold-bright); font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 6px 16px; border-radius: 20px; margin-bottom: 22px;
+    }
+    .home-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.05; margin-bottom: 18px;
+    }
+    .home-hero h1 em { font-style: normal; color: var(--gold-bright); }
+    .home-hero p { font-size: 18px; color: rgba(255,255,255,.72); max-width: 600px; margin: 0 auto 32px; line-height: 1.7; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 44px; }
+    .hero-stats { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 800; color: var(--gold-bright); }
+    .hero-stat-label { font-size: 12px; color: rgba(255,255,255,.55); letter-spacing: .5px; }
+
+    /* ── TOOLS GRID ── */
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 4px; }
+    .tool-card {
+      background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 24px; text-decoration: none; color: var(--text);
+      box-shadow: var(--sh); transition: all .22s; display: flex; flex-direction: column; gap: 12px;
+    }
+    .tool-card:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); border-color: var(--navy-mid); }
+    .tool-card.featured { border-color: var(--gold); background: linear-gradient(135deg, #fffdf7, #fff); }
+    .tool-icon { font-size: 36px; }
+    .tool-badge { display: inline-block; background: var(--gold); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: .5px; text-transform: uppercase; }
+    .tool-badge.free { background: var(--success); }
+    .tool-badge.urgent { background: var(--danger); }
+    .tool-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 700; color: var(--navy); }
+    .tool-desc { font-size: 14px; color: var(--muted); line-height: 1.6; flex: 1; }
+    .tool-arrow { font-size: 18px; color: var(--gold); margin-top: auto; }
+
+    /* ── HOW IT WORKS ── */
+    .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .how-step { text-align: center; padding: 20px 16px; }
+    .how-num { width: 44px; height: 44px; background: var(--navy); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; margin: 0 auto 14px; }
+    .how-step h4 { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--navy); margin-bottom: 6px; }
+    .how-step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── RIGHTS QUICK REF ── */
+    .rights-quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+    .right-chip { background: var(--navy); color: #fff; border-radius: 10px; padding: 14px 16px; }
+    .right-chip-sec { font-size: 11px; color: var(--gold-bright); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+    .right-chip-name { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .right-chip-desc { font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.5; }
+
+    /* ── SECTION SPACING ── */
+    .home-main { max-width: 1100px; margin: 0 auto; padding: 52px 20px 88px; }
+    .home-section { margin-bottom: 56px; }
+    .home-section-header { margin-bottom: 24px; }
+    .home-section-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+    .home-section-header p { font-size: 15px; color: var(--muted); max-width: 540px; }
+    .section-divider { height: 1px; background: var(--line); margin: 48px 0; }
+
+    /* ── EMERGENCY BANNER ── */
+    .emergency-banner {
+      background: linear-gradient(135deg, #7f1d1d, var(--danger));
+      color: #fff; border-radius: var(--radius); padding: 24px 28px;
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-bottom: 40px;
+    }
+    .emergency-banner-icon { font-size: 40px; flex-shrink: 0; }
+    .emergency-banner h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 800; margin-bottom: 5px; }
+    .emergency-banner p { font-size: 14px; color: rgba(255,255,255,.8); }
+    .emergency-banner .btn { background: #fff; color: var(--danger); margin-left: auto; }
+    .emergency-banner .btn:hover { background: #ffe4e4; }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="home-hero">
+  <div class="home-hero-inner fade-in">
+    <div class="hero-badge"><span class="pulse"></span> Free · No Signup · Ontario Law 2026</div>
+    <h1>Know Your Rights.<br><em>Protect Your Family.</em></h1>
+    <p>Ontario's #1 free legal information resource for parents facing Children's Aid Society involvement. AI-powered case analysis, Charter rights, CYFSA law — all in plain language.</p>
+    <div class="hero-btns">
+      <a href="analyzer.html" class="btn btn-gold btn-lg">⚖️ Analyze My Case Free →</a>
+      <a href="emergency.html" class="btn btn-outline btn-lg" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.3)">🚨 Emergency Protocol</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">Free — Always</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">6</div><div class="hero-stat-label">Legal Tools</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">CYFSA</div><div class="hero-stat-label">2017 Based</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">24/7</div><div class="hero-stat-label">Always Available</div></div>
+    </div>
+  </div>
+</div>
+<div class="gold-rule"></div>
+
+<main class="home-main">
+
+  <!-- EMERGENCY BANNER -->
+  <div class="emergency-banner fade-in">
+    <div class="emergency-banner-icon">🚨</div>
+    <div>
+      <h3>Child Removed Today?</h3>
+      <p>You have 5 days before a court hearing. Follow the hour-by-hour protocol. Call Legal Aid right now: <strong>1-800-668-8258</strong></p>
+    </div>
+    <a href="emergency.html" class="btn">See Emergency Protocol →</a>
+  </div>
+
+  <!-- VOLUNTARY AGREEMENT WARNING -->
+  <div style="background:linear-gradient(135deg,#7f1d1d,#b91c1c);color:#fff;border-radius:var(--radius);padding:22px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:28px">
+    <div style="font-size:36px;flex-shrink:0">⚠️</div>
+    <div style="flex:1">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:800;margin-bottom:5px">CAS Asking You to Sign a "Voluntary" Agreement?</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.85)">This is the single most dangerous moment in your case. A voluntary agreement means you are legally admitting CAS's concerns are valid — with no judge, no review, no protection. <strong>Do not sign anything until you read this.</strong></div>
+    </div>
+    <a href="rights.html" style="background:#fff;color:#b91c1c;padding:11px 20px;border-radius:9px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap;flex-shrink:0">Read the Traps →</a>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="home-section">
+    <div class="home-section-header">
+      <h2>All Free Legal Tools</h2>
+      <p>Everything you need to understand your rights and build your defense — in plain language.</p>
+    </div>
+    <div class="tools-grid">
+
+      <a class="tool-card featured" href="analyzer.html">
+        <div class="tool-icon">⚖️</div>
+        <span class="tool-badge free">FREE · AI Powered</span>
+        <div class="tool-title">AI Case Analyzer</div>
+        <div class="tool-desc">Upload your CAS letters, photos, and screenshots. Get an instant lawyer-ready report — Charter rights flagged, defense strategies ranked, next steps outlined. Powered by Google Gemini — completely free.</div>
+        <div class="tool-arrow">→ Start Analysis</div>
+      </a>
+
+      <a class="tool-card featured" href="rights.html" style="border-color:#fca5a5;background:linear-gradient(135deg,#fff5f5,#fff)">
+        <div class="tool-icon">🔴</div>
+        <span class="tool-badge urgent">Read Before Signing Anything</span>
+        <div class="tool-title">Know Your Rights — Traps & Tricks</div>
+        <div class="tool-desc">The voluntary agreement trap. The 30-day appeal window nobody tells you about. What "consenting to a finding" really means. Court order conditions you can challenge. Every right you are legally entitled to — with the exact CYFSA section. Most parents never know this until it's too late.</div>
+        <div class="tool-arrow" style="color:var(--danger)">→ Read Before You Talk to CAS</div>
+      </a>
+
+      <a class="tool-card" href="emergency.html">
+        <div class="tool-icon">🚨</div>
+        <span class="tool-badge urgent">Read First</span>
+        <div class="tool-title">Emergency Removal Protocol</div>
+        <div class="tool-desc">Child removed? Hour-by-hour action plan for the critical 5-day window before your court hearing. What to do, who to call, what to say — and what not to say.</div>
+        <div class="tool-arrow">→ Emergency Protocol</div>
+      </a>
+
+      <a class="tool-card" href="charter.html">
+        <div class="tool-icon">🛡️</div>
+        <span class="tool-badge">Know Your Rights</span>
+        <div class="tool-title">Charter Rights Guide</div>
+        <div class="tool-desc">Plain language explanations of Sections 7, 8, 9, 10(b), and 15 of the Canadian Charter — with real CAS examples of what violations look like and how to challenge them.</div>
+        <div class="tool-arrow">→ Charter Guide</div>
+      </a>
+
+      <a class="tool-card" href="cyfsa.html">
+        <div class="tool-icon">📜</div>
+        <span class="tool-badge">Ontario Law</span>
+        <div class="tool-title">CYFSA Law Reference</div>
+        <div class="tool-desc">The Child, Youth and Family Services Act 2017 explained section by section. What CAS can and can't do, legal grounds, court processes, and your rights at every stage.</div>
+        <div class="tool-arrow">→ CYFSA Reference</div>
+      </a>
+
+      <a class="tool-card" href="evidence.html">
+        <div class="tool-icon">📁</div>
+        <span class="tool-badge free">FREE Tool</span>
+        <div class="tool-title">Evidence File Builder</div>
+        <div class="tool-desc">Organize your photos, screenshots, documents, and notes into a professional evidence package your lawyer can use immediately. Export as a downloadable PDF report.</div>
+        <div class="tool-arrow">→ Build Evidence File</div>
+      </a>
+
+      <a class="tool-card" href="lawyer.html">
+        <div class="tool-icon">👨‍⚖️</div>
+        <span class="tool-badge free">Free Referrals</span>
+        <div class="tool-title">Find a Lawyer</div>
+        <div class="tool-desc">Legal Aid Ontario contacts, duty counsel information, lawyer referral services, and questions to ask when choosing a child protection lawyer in Ontario.</div>
+        <div class="tool-arrow">→ Find a Lawyer</div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="home-section">
+    <div class="home-section-header">
+      <h2>How the AI Analyzer Works</h2>
+      <p>Free, private, and instant — no account required.</p>
+    </div>
+    <div class="card">
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <h4>Describe Your Situation</h4>
+          <p>Tell us what CAS has done — visits, letters, removal, court orders. The more detail, the better.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <h4>Upload Your Evidence</h4>
+          <p>Photos, screenshots, CAS letters, court documents. Even iPhone HEIC photos work.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <h4>AI Analyzes Everything</h4>
+          <p>Google Gemini reads your documents and cross-references Ontario law — CYFSA 2017 and the Charter.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">4</div>
+          <h4>Get Your Report</h4>
+          <p>Download a lawyer-ready report: rights flagged, defense strategies ranked, next steps listed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- CHARTER QUICK REF -->
+  <div class="home-section">
+    <div class="home-section-header">
+      <h2>Your Charter Rights at a Glance</h2>
+      <p>These rights apply to every CAS investigation in Ontario.</p>
+    </div>
+    <div class="rights-quick">
+      <div class="right-chip">
+        <div class="right-chip-sec">Section 7</div>
+        <div class="right-chip-name">Life, Liberty & Security</div>
+        <div class="right-chip-desc">CAS must follow principles of fundamental justice. You cannot be deprived of your child arbitrarily.</div>
+      </div>
+      <div class="right-chip">
+        <div class="right-chip-sec">Section 8</div>
+        <div class="right-chip-name">Search & Seizure</div>
+        <div class="right-chip-desc">You can refuse entry to your home without a warrant. CAS needs either consent, a warrant, or an emergency.</div>
+      </div>
+      <div class="right-chip">
+        <div class="right-chip-sec">Section 9</div>
+        <div class="right-chip-name">Arbitrary Detention</div>
+        <div class="right-chip-desc">You cannot be kept at a CAS office against your will or detained without legal authority.</div>
+      </div>
+      <div class="right-chip">
+        <div class="right-chip-sec">Section 10(b)</div>
+        <div class="right-chip-name">Right to Counsel</div>
+        <div class="right-chip-desc">You have the right to speak with a lawyer before answering CAS questions. Say so immediately.</div>
+      </div>
+      <div class="right-chip">
+        <div class="right-chip-sec">Section 15</div>
+        <div class="right-chip-name">Equality Rights</div>
+        <div class="right-chip-desc">CAS cannot discriminate based on race, disability, religion, culture, or socioeconomic status.</div>
+      </div>
+    </div>
+    <div style="margin-top:18px;text-align:center">
+      <a href="charter.html" class="btn btn-navy">Read Full Charter Guide →</a>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- DISCLAIMER -->
+  <div class="alert alert-warn">
+    <strong>⚠️ Educational Information Only</strong>
+    This website provides general legal information based on Ontario law (CYFSA 2017, Canadian Charter of Rights and Freedoms, Ontario Human Rights Code). It is not legal advice and does not create a lawyer-client relationship. Every case is different. Always consult a qualified Ontario family law lawyer. Legal Aid Ontario: <strong>1-800-668-8258</strong> (24/7, free).
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script>OPD.init('home');</script>
+</body>
+</html>

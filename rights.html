@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Know Your Rights — What CAS Won't Tell You · Ontario Parent Defense</title>
+  <meta name="description" content="The traps CAS uses that parents don't know about. Voluntary agreements, court order tricks, what you're entitled to by law — all in plain language.">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    /* ── TRAP CARDS ── */
+    .trap-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: var(--sh);
+      transition: box-shadow .2s;
+    }
+    .trap-card:hover { box-shadow: var(--sh-md); }
+    .trap-header {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--line);
+      cursor: pointer;
+      user-select: none;
+    }
+    .trap-header:hover { background: #fafbff; }
+    .trap-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+    .trap-header-text { flex: 1; }
+    .trap-danger { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--danger); margin-bottom: 5px; }
+    .trap-title { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 800; color: var(--navy); line-height: 1.2; }
+    .trap-subtitle { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .trap-toggle { font-size: 20px; color: var(--muted); flex-shrink: 0; transition: transform .2s; margin-top: 4px; }
+    .trap-card.open .trap-toggle { transform: rotate(180deg); }
+    .trap-body { padding: 24px; display: none; }
+    .trap-card.open .trap-body { display: block; }
+
+    .what-they-say {
+      background: #fef9f0;
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .what-they-say::before {
+      content: '💬 WHAT CAS SAYS';
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 7px;
+    }
+    .what-they-say p { font-size: 15px; font-style: italic; color: var(--text); line-height: 1.65; }
+
+    .what-it-means {
+      background: var(--danger-bg);
+      border: 2px solid #fca5a5;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .what-it-means::before {
+      content: '🔴 WHAT IT REALLY MEANS';
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--danger);
+      margin-bottom: 7px;
+    }
+    .what-it-means p { font-size: 15px; color: #7f1d1d; line-height: 1.65; }
+
+    .what-to-do {
+      background: var(--success-bg);
+      border: 2px solid #86efac;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .what-to-do::before {
+      content: '✅ WHAT TO DO INSTEAD';
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--success);
+      margin-bottom: 7px;
+    }
+    .what-to-do p, .what-to-do ul { font-size: 14px; color: #1a3a1a; line-height: 1.7; }
+    .what-to-do ul { margin-left: 18px; }
+    .what-to-do li { margin-bottom: 5px; }
+
+    .law-cite {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--navy); color: var(--gold-bright);
+      font-family: 'Courier New', monospace; font-size: 12px; font-weight: 700;
+      padding: 3px 10px; border-radius: 5px; margin: 3px 3px 3px 0;
+    }
+
+    /* ── RIGHTS TABLE ── */
+    .rights-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .rights-table th { background: var(--navy); color: #fff; padding: 11px 14px; text-align: left; font-size: 12px; font-weight: 700; letter-spacing: .4px; }
+    .rights-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.6; }
+    .rights-table tr:nth-child(even) td { background: #f8faff; }
+    .rights-table tr:last-child td { border-bottom: none; }
+    .rights-table td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .rights-table .apply { font-size: 11px; }
+    .rights-table .law-tag { background: var(--navy); color: var(--gold-bright); font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px; white-space: nowrap; display: inline-block; margin: 1px; }
+
+    /* ── SECTION HEADERS ── */
+    .section-header { margin: 40px 0 18px; }
+    .section-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .section-header p { font-size: 15px; color: var(--muted); }
+    .section-divider { height: 1px; background: var(--line); margin: 36px 0; }
+
+    /* ── CHECKLIST ── */
+    .checklist { display: flex; flex-direction: column; gap: 10px; }
+    .check-item { display: flex; align-items: flex-start; gap: 14px; background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .check-item input[type=checkbox] { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--navy); cursor: pointer; }
+    .check-item label { font-size: 14px; color: var(--text); line-height: 1.6; cursor: pointer; }
+    .check-item label strong { color: var(--navy); display: block; margin-bottom: 2px; font-size: 15px; }
+    .check-item.checked-item { background: var(--success-bg); border-color: #86efac; }
+
+    /* ── WORD FOR WORD ── */
+    .script-box {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin: 12px 0;
+      position: relative;
+    }
+    .script-box::before {
+      content: '📢 SAY EXACTLY THIS';
+      display: block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--gold-bright);
+      margin-bottom: 10px;
+    }
+    .script-box p { font-size: 16px; font-style: italic; line-height: 1.7; color: #fff; }
+    .script-box .copy-btn {
+      position: absolute; top: 14px; right: 14px;
+      background: rgba(255,255,255,.15); color: #fff; border: none;
+      border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700;
+      cursor: pointer; transition: .15s;
+    }
+    .script-box .copy-btn:hover { background: rgba(255,255,255,.3); }
+
+    /* ── NEVER DO ── */
+    .never-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .never-item { background: var(--danger-bg); border: 1px solid #fca5a5; border-radius: 10px; padding: 16px 18px; }
+    .never-item-title { font-size: 14px; font-weight: 700; color: #7f1d1d; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 7px; }
+    .never-item-body { font-size: 13px; color: #991b1b; line-height: 1.6; }
+
+    /* ── ALWAYS DO ── */
+    .always-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+    .always-item { background: var(--success-bg); border: 1px solid #86efac; border-radius: 10px; padding: 16px 18px; }
+    .always-item-title { font-size: 14px; font-weight: 700; color: var(--success); margin-bottom: 6px; display: flex; align-items: flex-start; gap: 7px; }
+    .always-item-body { font-size: 13px; color: #064e3b; line-height: 1.6; }
+
+    /* ── EXPAND ALL BTN ── */
+    .expand-all-btn { display: inline-flex; align-items: center; gap: 7px; background: var(--cream); border: 1.5px solid var(--line); border-radius: 8px; padding: 8px 16px; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; color: var(--navy); cursor: pointer; transition: .15s; margin-bottom: 16px; }
+    .expand-all-btn:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    /* ── BIG WARNING ── */
+    .big-warning {
+      background: linear-gradient(135deg, #7f1d1d, var(--danger));
+      color: #fff; border-radius: var(--radius); padding: 28px 32px;
+      margin-bottom: 28px;
+    }
+    .big-warning h3 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    .big-warning p { font-size: 15px; color: rgba(255,255,255,.85); line-height: 1.7; }
+    .big-warning strong { color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="page-hero" style="background: linear-gradient(135deg, #5b1111 0%, #7f1d1d 50%, #b91c1c 100%);">
+  <div class="page-hero-inner">
+    <div class="hero-stamp" style="background:rgba(255,200,200,.15);border-color:rgba(255,200,200,.4);color:#fca5a5">⚠️ What They Won't Tell You</div>
+    <h1>Know Every <em>Right</em> You Have</h1>
+    <p>The traps. The tricks. The phrases that sound harmless but sign away your rights. The sections of the law that keep kids home — if you know them. Read this before you talk to CAS.</p>
+  </div>
+</div>
+<div class="gold-rule"></div>
+
+<main class="page-main">
+
+  <!-- BIG WARNING -->
+  <div class="big-warning">
+    <h3>🚨 The Single Biggest Trap: "Voluntary" Agreements</h3>
+    <p>When CAS says <em>"We just want to work with you voluntarily — no court, no judge, no big deal"</em> — <strong>this is the most dangerous moment in your entire case.</strong></p>
+    <p style="margin-top:10px">By signing a voluntary agreement, you are <strong>agreeing that CAS's concerns are valid</strong>, giving them ongoing access to your home and child with no court oversight, and creating a documented record they will use in court if you ever don't comply. You give up your right to challenge the grounds. A judge never reviews it.</p>
+    <p style="margin-top:10px"><strong>Always consult a lawyer before signing anything. Call Legal Aid first: 1-800-668-8258</strong></p>
+  </div>
+
+  <!-- TRAPS & TRICKS -->
+  <div class="section-header">
+    <h2>🪤 The Traps — Read Every One</h2>
+    <p>These are the most common tactics used in Ontario CAS cases. Most parents don't know until it's too late.</p>
+  </div>
+
+  <button class="expand-all-btn" onclick="expandAll()">▼ Expand All Traps</button>
+
+  <!-- TRAP 1: VOLUNTARY AGREEMENTS -->
+  <div class="trap-card open" id="trap1">
+    <div class="trap-header" onclick="toggleTrap('trap1')">
+      <div class="trap-icon">📋</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🔴 Trap #1 — Most Common</div>
+        <div class="trap-title">The "Voluntary" Agreement Trap</div>
+        <div class="trap-subtitle">Sounds like cooperation. Functions like a guilty plea.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"We don't want to go to court. Let's just do this voluntarily. It's much better for your family if we work together. Just sign this agreement and we can keep things informal."</p></div>
+      <div class="what-it-means"><p>
+        A voluntary agreement under <span class="law-cite">CYFSA s.75</span> is a legally binding contract. By signing it, you are:
+        <br><br>
+        <strong>① Admitting CAS's concerns are valid</strong> — the agreement is based on their risk assessment, and signing it is treated as agreement with that assessment.<br><br>
+        <strong>② Giving CAS access to your home, your child, and your records with no court oversight</strong> — no judge reviews the conditions, no judge limits what they can demand.<br><br>
+        <strong>③ Creating a paper trail</strong> — if you miss even one condition (a counselling appointment, a drug test, a home visit), CAS can immediately go to court and say you breached the agreement. That breach becomes evidence against you.<br><br>
+        <strong>④ Waiving your right to challenge the grounds</strong> — you cannot later say "CAS had no right to be involved" because you already agreed they did.<br><br>
+        <strong>⑤ The agreement can be extended</strong> — it starts at 3 months, can run to 12 months. By the end, CAS has a year of documented involvement to use in a court application.
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li><strong>Never sign anything at the door or on the same day CAS arrives.</strong> Say: "I need to speak with my lawyer before signing anything."</li>
+          <li>Call Legal Aid Ontario immediately: <strong>1-800-668-8258</strong></li>
+          <li>If you must engage CAS, ask them to put their concerns in writing first — then take that document to your lawyer</li>
+          <li>Know that you are allowed to say <strong>"I am not signing a voluntary agreement. If you believe my child is at risk, take it to court."</strong> This is your legal right.</li>
+          <li>Court is not always worse. A court hearing means a judge reviews CAS's evidence — and CAS must prove their grounds, not just assert them.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.75 — Voluntary Service Agreements</div>
+      <div class="law-cite">CYFSA s.1(2) — Least Restrictive Principle</div>
+    </div>
+  </div>
+
+  <!-- TRAP 2: COURT ORDER CONDITIONS -->
+  <div class="trap-card" id="trap2">
+    <div class="trap-header" onclick="toggleTrap('trap2')">
+      <div class="trap-icon">⚖️</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🔴 Trap #2 — Court Orders</div>
+        <div class="trap-title">The "Just One Condition" Court Order Trap</div>
+        <div class="trap-subtitle">Court orders have conditions. Every condition is a potential trap.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"The judge has made a supervision order. It's not that bad — you keep your child at home. You just have to follow these conditions: weekly home visits, a parenting course, drug testing, and meet with your worker every two weeks."</p></div>
+      <div class="what-it-means"><p>
+        A supervision order under <span class="law-cite">CYFSA s.101(b)</span> keeps your child at home — which sounds good. But every condition is enforceable by law. Here's what parents don't know:<br><br>
+        <strong>① You MUST comply with every condition, perfectly, every time.</strong> Miss one drug test — even with a legitimate reason — and CAS can return to court claiming breach. That can convert your supervision order into wardship (your child taken).<br><br>
+        <strong>② You can CHALLENGE unreasonable conditions at the hearing.</strong> Before you accept conditions, your lawyer can argue that specific conditions are unnecessary, too intrusive, or disproportionate. Most parents don't know conditions are negotiable.<br><br>
+        <strong>③ Every condition must meet the "least restrictive" test.</strong> Under <span class="law-cite">CYFSA s.1(2)</span>, each condition imposed must be the least restrictive option necessary. If it isn't, it can be challenged.<br><br>
+        <strong>④ Conditions can be changed.</strong> You can bring a motion to vary the conditions if your circumstances change or if compliance becomes impossible <span class="law-cite">(CYFSA s.115 — Motion to Change)</span>.
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li><strong>Before accepting any supervision order conditions, review EVERY condition with your lawyer.</strong> Negotiate before you sign — not after.</li>
+          <li>Ask your lawyer: "Can we challenge this condition as not meeting the least restrictive test?"</li>
+          <li>Document every single compliance: keep receipts, attendance records, photos, texts confirming home visits. If you comply, prove it.</li>
+          <li>If a condition becomes impossible (e.g., you lose your job and can't pay for a required program), file a motion to change <strong>before</strong> you breach — not after.</li>
+          <li>If CAS claims breach, challenge it immediately in court. One missed visit due to illness is not necessarily a breach if you notified them.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.101(b) — Supervision Orders</div>
+      <div class="law-cite">CYFSA s.115 — Motion to Change</div>
+      <div class="law-cite">CYFSA s.1(2) — Least Restrictive Principle</div>
+    </div>
+  </div>
+
+  <!-- TRAP 3: CONSENT HEARING -->
+  <div class="trap-card" id="trap3">
+    <div class="trap-header" onclick="toggleTrap('trap3')">
+      <div class="trap-icon">🖊️</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🔴 Trap #3 — Court Hearings</div>
+        <div class="trap-title">Consenting to a Protection Finding</div>
+        <div class="trap-subtitle">CAS offers a "deal." You take it without knowing what you gave up.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"If you consent to a finding of protection today, we'll agree to a supervision order — your child stays home. If you fight it, the hearing could take months and your child stays in care the whole time. It's better to just agree and get your child home now."</p></div>
+      <div class="what-it-means"><p>
+        This is real leverage — and it works because most parents will do anything to get their child home. But here's what consenting to a finding means:<br><br>
+        <strong>① You are legally admitting your child was "in need of protection."</strong> This is on the court record forever. It can and will be referenced if CAS ever becomes involved again.<br><br>
+        <strong>② You cannot appeal the finding later</strong> — because you consented to it. Your right to challenge the grounds is gone.<br><br>
+        <strong>③ CAS can use it as a starting point next time.</strong> "Prior finding of child in need of protection" is significant evidence in any future proceeding.<br><br>
+        <strong>④ The "deal" CAS offers is not always as good as it sounds.</strong> You may get your child home, but under conditions that are nearly impossible to meet — which sets up the next stage of involvement.
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li>Never consent to a protection finding at a first hearing without a lawyer present.</li>
+          <li>Ask your lawyer whether "without prejudice" or "without admissions" terms can be included in any agreement.</li>
+          <li>In some cases fighting is worth it. In others, a negotiated consent is reasonable. <strong>Your lawyer must advise you on this — not CAS.</strong></li>
+          <li>Ask your lawyer: <strong>"If I consent today, can this finding ever be used against me again?"</strong> The answer is yes — understand that before you decide.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.101 — Court Findings</div>
+      <div class="law-cite">Family Law Rules — Rule 33</div>
+    </div>
+  </div>
+
+  <!-- TRAP 4: INTERVIEWS WITH CHILDREN -->
+  <div class="trap-card" id="trap4">
+    <div class="trap-header" onclick="toggleTrap('trap4')">
+      <div class="trap-icon">👶</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🔴 Trap #4 — Your Children</div>
+        <div class="trap-title">CAS Interviewing Your Child Without You</div>
+        <div class="trap-subtitle">Legal — but you have rights about how it happens.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"We need to speak with your child alone. It's standard procedure. We'll just have a quick chat at school."</p></div>
+      <div class="what-it-means"><p>
+        CAS <strong>can</strong> interview your child without you present under <span class="law-cite">CYFSA s.79</span> — this is legal. But parents have rights around this that CAS often doesn't volunteer:<br><br>
+        <strong>① You have the right to know the interview happened.</strong> CAS must generally notify you that an investigation is occurring.<br><br>
+        <strong>② The method of interview matters legally.</strong> Child interviews must follow proper forensic protocols. Questions must be non-leading. If CAS used leading or suggestive questions with your child, the interview can be challenged.<br><br>
+        <strong>③ Your child cannot be removed from school without your consent unless CAS has a warrant or an emergency.</strong> Walking into a school and taking a child away for an "interview" without consent or a warrant is legally questionable.<br><br>
+        <strong>④ You can request disclosure of the interview notes</strong> through your lawyer. Those notes become evidence — and errors in them can be challenged.
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li>Notify your child's school in writing that CAS does not have your consent to remove your child from school without a warrant or court order.</li>
+          <li>Ask your lawyer for disclosure of any interview notes or records from interviews with your child.</li>
+          <li>If your child's statement was obtained through leading questions or improper methods, bring this to your lawyer immediately — it may be challengeable.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.79 — Investigation Powers</div>
+      <div class="law-cite">Ontario College of Social Workers — Professional Standards</div>
+    </div>
+  </div>
+
+  <!-- TRAP 5: EVERYTHING YOU SAY -->
+  <div class="trap-card" id="trap5">
+    <div class="trap-header" onclick="toggleTrap('trap5')">
+      <div class="trap-icon">🎙️</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🔴 Trap #5 — What You Say</div>
+        <div class="trap-title">Everything You Say Is Being Documented</div>
+        <div class="trap-subtitle">CAS workers write notes after every interaction. What you say becomes their evidence.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"We're just here to chat and get your side of things. This is just a friendly visit to see how the family is doing."</p></div>
+      <div class="what-it-means"><p>
+        There is no such thing as an off-the-record conversation with CAS. Every word you say during every interaction — at your door, on the phone, in a meeting — is being noted in your file. CAS workers are required by law to document their investigations. Those notes will be used in court.<br><br>
+        <strong>Common ways parents hurt themselves:</strong><br>
+        • Admitting to past drug or alcohol use "to show they're being honest"<br>
+        • Explaining previous incidents that CAS doesn't already know about<br>
+        • Criticizing the other parent in ways that CAS documents as "conflict in the home"<br>
+        • Agreeing that "yes, things have been difficult" in ways that get recorded as admission of problems<br>
+        • Letting CAS into the home and then having them photograph or note anything they see
+      </p></div>
+      <div class="what-to-do">
+        <p>You have the right to say very little. This is legally protected by your Section 7 and Section 10(b) Charter rights.</p>
+        <ul>
+          <li><strong>At the door:</strong> "I am not consenting to entry. I want to speak with a lawyer first."</li>
+          <li><strong>On the phone:</strong> "I am not comfortable discussing this without my lawyer present. Please put your concerns in writing and I will have my lawyer respond."</li>
+          <li><strong>In a meeting:</strong> "I want my lawyer present before I answer any questions."</li>
+          <li>After every CAS interaction — write down exactly what you said and exactly what they said, with the date and time. Keep this log.</li>
+        </ul>
+      </div>
+      <div class="script-box">
+        <button class="copy-btn" onclick="copyScript(this)">Copy</button>
+        <p>"I understand you are here regarding a concern about my child. I am not going to answer any questions right now. I want to speak with a lawyer first. Please put any concerns in writing. I am calling Legal Aid Ontario at 1-800-668-8258. I will have my lawyer contact you."</p>
+      </div>
+      <div class="law-cite">Charter s.7 — Right to Silence</div>
+      <div class="law-cite">Charter s.10(b) — Right to Counsel</div>
+    </div>
+  </div>
+
+  <!-- TRAP 6: THE 30-DAY APPEAL WINDOW -->
+  <div class="trap-card" id="trap6">
+    <div class="trap-header" onclick="toggleTrap('trap6')">
+      <div class="trap-icon">📅</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🔴 Trap #6 — Deadlines</div>
+        <div class="trap-title">The 30-Day Appeal Window Nobody Tells You About</div>
+        <div class="trap-subtitle">Every court order can be appealed. Most parents never know before it's too late.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>(Nothing. CAS workers don't tell you about appeal rights. Neither do many duty counsel in rushed hearings.)</p></div>
+      <div class="what-it-means"><p>
+        Every order made in a child protection case can be appealed to the Ontario Court of Appeal within <strong>30 days</strong> of the order being made. After 30 days, you need special permission to appeal — which is much harder to get.<br><br>
+        Orders you can appeal include:<br>
+        • Society wardship orders<br>
+        • Crown wardship orders<br>
+        • Supervision orders with conditions you disagree with<br>
+        • Protection findings<br>
+        • Termination of access orders<br><br>
+        <strong>Many parents accept terrible orders because they think it's done.</strong> It is not done. You have 30 days.
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li><strong>Immediately after any court order you disagree with, ask your lawyer: "Do I have grounds to appeal this?"</strong></li>
+          <li>Write down the exact date of every order made in your case. Your 30-day clock starts on that date.</li>
+          <li>You do not need perfect grounds to discuss an appeal — you need to ask within those 30 days.</li>
+          <li>Legal Aid covers appeals in child protection matters if you qualify.</li>
+          <li>If your lawyer did not advise you of your appeal rights and the deadline passed, you may have a complaint to the Law Society of Ontario (lso.ca).</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.121 — Appeals</div>
+      <div class="law-cite">Courts of Justice Act s.6(1)(b)</div>
+      <div class="law-cite">Family Law Rules — Rule 38</div>
+    </div>
+  </div>
+
+  <!-- TRAP 7: DISCLOSURE -->
+  <div class="trap-card" id="trap7">
+    <div class="trap-header" onclick="toggleTrap('trap7')">
+      <div class="trap-icon">📂</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🟡 Trap #7 — Your Right to Information</div>
+        <div class="trap-title">You Are Entitled to See Your CAS File</div>
+        <div class="trap-subtitle">Most parents never ask. CAS never offers. Your file can win your case.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>(CAS doesn't volunteer this. They disclose only what the law requires — and only if you ask through the right channels.)</p></div>
+      <div class="what-it-means"><p>
+        You have the right to disclosure of CAS records in court proceedings. Your complete CAS file — including all notes from worker visits, the initial report, their risk assessment, all internal communications — must be disclosed to your lawyer in advance of a court hearing.<br><br>
+        <strong>Why this matters:</strong><br>
+        • The original complaint may be from a vindictive neighbour, ex-partner, or family member — your file will show this<br>
+        • Worker notes may be inaccurate, exaggerated, or contradict what CAS is claiming in court<br>
+        • The risk assessment tool (ORAM or CWIS) may have been applied incorrectly<br>
+        • CAS may have violated their own protocols during the investigation — which is a defense
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li><strong>As soon as you have a lawyer, instruct them to request full disclosure of your CAS file immediately.</strong></li>
+          <li>Under the Family Law Rules, CAS must disclose all records they intend to rely on before the hearing.</li>
+          <li>Request disclosure of the original complaint — including who made it.</li>
+          <li>If CAS refuses disclosure, your lawyer can bring a motion to compel disclosure.</li>
+          <li>Review the disclosure carefully with your lawyer — errors in the notes are often found and are powerful at hearings.</li>
+        </ul>
+      </div>
+      <div class="law-cite">Family Law Rules — Rule 20 Disclosure</div>
+      <div class="law-cite">CYFSA s.312 — Records</div>
+      <div class="law-cite">Municipal Freedom of Information Act — MFIPPA</div>
+    </div>
+  </div>
+
+  <!-- TRAP 8: POVERTY NOT NEGLECT -->
+  <div class="trap-card" id="trap8">
+    <div class="trap-header" onclick="toggleTrap('trap8')">
+      <div class="trap-icon">💰</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🟡 Trap #8 — Poverty & Neglect</div>
+        <div class="trap-title">Poverty Is Not Neglect Under CYFSA</div>
+        <div class="trap-subtitle">Being poor, struggling, or living in a small home is NOT a legal ground for child removal.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"We're concerned your home doesn't have enough food, the children are sharing a room, and you're behind on your bills. These are signs of neglect."</p></div>
+      <div class="what-it-means"><p>
+        <strong>Poverty is NOT neglect under the law.</strong> CYFSA s.74(2)(c) defines neglect as failure to provide adequate care where the parent <em>is able to</em> provide it. Economic inability to provide — being poor — is explicitly NOT the same as neglect.<br><br>
+        Children sharing bedrooms is not a protection concern. Having a small home is not a protection concern. Receiving social assistance is not a protection concern. Using food banks is not a protection concern.<br><br>
+        This is one of the most disproportionate uses of CAS power in Ontario — and it disproportionately impacts racialized, Indigenous, and low-income families.
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li>If CAS is citing your financial situation as a concern, explicitly say: <strong>"Poverty is not neglect under CYFSA s.74(2)(c). I am doing everything I can with my resources."</strong></li>
+          <li>Document your efforts to address financial hardship: food bank visits, Ontario Works, housing applications, community supports — all show you are actively parenting.</li>
+          <li>A lawyer can challenge "neglect" grounds by showing that the conditions are caused by economic circumstances, not parental failure.</li>
+          <li>If CAS is citing poverty-related concerns, contact a community legal clinic that specializes in poverty law — they often work alongside family law counsel.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.74(2)(c) — Definition of Neglect</div>
+      <div class="law-cite">Charter s.15 — Equality Rights</div>
+      <div class="law-cite">Ontario Human Rights Code s.1</div>
+    </div>
+  </div>
+
+  <!-- TRAP 9: KINSHIP -->
+  <div class="trap-card" id="trap9">
+    <div class="trap-header" onclick="toggleTrap('trap9')">
+      <div class="trap-icon">👨‍👩‍👧‍👦</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🟡 Trap #9 — If Removal Happens</div>
+        <div class="trap-title">Your Family Can Take Your Child — Not a Stranger</div>
+        <div class="trap-subtitle">CAS prefers foster homes. You have the right to demand kinship placement first.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"Your child is going into foster care while we assess the situation."</p></div>
+      <div class="what-it-means"><p>
+        CAS has a legal obligation under <span class="law-cite">CYFSA s.74(3)</span> to consider placements with relatives and community members before placing a child with strangers. This is called <strong>kinship placement</strong>. Many CAS workers default to licensed foster homes because it's easier — not because it's legally required.<br><br>
+        Kinship placement is <strong>better for your child</strong> (familiar adult, familiar environment), <strong>better for your case</strong> (you can have contact more easily), and <strong>required by law to be considered first.</strong>
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li><strong>The moment removal occurs or seems imminent, immediately identify family members who can take your child.</strong> Contact grandparents, aunts, uncles, adult siblings, close family friends.</li>
+          <li>Tell CAS immediately: <strong>"I am requesting kinship placement with [person's name]. They are willing to take my child right now."</strong></li>
+          <li>Your identified kinship caregiver should contact CAS directly to express willingness and begin the assessment.</li>
+          <li>If CAS refuses kinship placement without a good reason, your lawyer can challenge this decision in court as a failure to meet their legislative obligation.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.74(3) — Kinship Placement Preference</div>
+      <div class="law-cite">CYFSA s.1(2)(a) — Family Preservation Principle</div>
+    </div>
+  </div>
+
+  <!-- TRAP 10: MOTION TO CHANGE -->
+  <div class="trap-card" id="trap10">
+    <div class="trap-header" onclick="toggleTrap('trap10')">
+      <div class="trap-icon">🔄</div>
+      <div class="trap-header-text">
+        <div class="trap-danger">🟡 Trap #10 — After Court Orders</div>
+        <div class="trap-title">Court Orders Are Not Permanent — You Can Change Them</div>
+        <div class="trap-subtitle">Circumstances change. The law provides a way to change orders when they do.</div>
+      </div>
+      <div class="trap-toggle">▼</div>
+    </div>
+    <div class="trap-body">
+      <div class="what-they-say"><p>"The judge has made an order. That's it."</p></div>
+      <div class="what-it-means"><p>
+        Court orders in child protection are <strong>not necessarily permanent.</strong> Under <span class="law-cite">CYFSA s.115</span>, any party — including you — can bring a motion to change a supervision order, society wardship, or access order when there has been a material change in circumstances.<br><br>
+        <strong>Examples of material change:</strong><br>
+        • You completed the required programs<br>
+        • Your housing or financial situation improved<br>
+        • You have new evidence that the original finding was wrong<br>
+        • The CAS worker on your file has changed and the new worker has different concerns<br>
+        • Your child is being harmed in foster care
+      </p></div>
+      <div class="what-to-do">
+        <ul>
+          <li>Keep records of everything you accomplish — completed programs, stable housing, clean drug tests, counselling attendance. Every achievement is evidence for a motion to change.</li>
+          <li>Ask your lawyer: <strong>"How long until we can bring a motion to change this order?"</strong></li>
+          <li>If your child is in care and you have evidence of harm or neglect by the foster family, your lawyer can bring an urgent motion.</li>
+          <li>Society wardship orders have a maximum duration of 12 months before CAS must return to court. At that point, you have a full opportunity to argue for your child's return.</li>
+        </ul>
+      </div>
+      <div class="law-cite">CYFSA s.115 — Motion to Change</div>
+      <div class="law-cite">CYFSA s.114 — Status Review</div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- COMPLETE RIGHTS TABLE -->
+  <div class="section-header">
+    <h2>📋 Every Right You Are Entitled To — Complete List</h2>
+    <p>These are rights guaranteed by law. Most parents never know about them. Print this page and bring it to court.</p>
+  </div>
+
+  <div class="card">
+    <table class="rights-table">
+      <thead>
+        <tr>
+          <th style="width:28%">Your Right</th>
+          <th style="width:38%">What It Means in Plain Language</th>
+          <th style="width:20%">When It Applies</th>
+          <th style="width:14%">Law</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Right to be told why CAS is involved</td>
+          <td>CAS must tell you what concern was reported, under which CYFSA section, and who made the report (though reporter identity is protected)</td>
+          <td>From the first contact</td>
+          <td><span class="law-tag">CYFSA s.74</span></td>
+        </tr>
+        <tr>
+          <td>Right to refuse entry to your home</td>
+          <td>CAS cannot enter without your consent, a warrant, or a genuine emergency. You can say no at the door.</td>
+          <td>Always — unless emergency or warrant</td>
+          <td><span class="law-tag">Charter s.8</span> <span class="law-tag">CYFSA s.81</span></td>
+        </tr>
+        <tr>
+          <td>Right to speak with a lawyer first</td>
+          <td>Before answering CAS questions, you have the right to call a lawyer. CAS must wait while you do so.</td>
+          <td>Any time you feel detained or pressured</td>
+          <td><span class="law-tag">Charter s.10(b)</span></td>
+        </tr>
+        <tr>
+          <td>Right to silence</td>
+          <td>You do not have to answer CAS questions. You can say "I am not answering questions without a lawyer."</td>
+          <td>Always — though cooperation has consequences too</td>
+          <td><span class="law-tag">Charter s.7</span></td>
+        </tr>
+        <tr>
+          <td>Right to refuse a voluntary agreement</td>
+          <td>You cannot be forced to sign. If CAS believes a child is at risk, they must go to court and prove it.</td>
+          <td>Investigation stage</td>
+          <td><span class="law-tag">CYFSA s.75</span></td>
+        </tr>
+        <tr>
+          <td>Right to a court hearing</td>
+          <td>If CAS believes your child needs protection, you have the right to a full court hearing where they must prove their case.</td>
+          <td>Before any court order</td>
+          <td><span class="law-tag">CYFSA s.94</span></td>
+        </tr>
+        <tr>
+          <td>Right to know where your child is placed</td>
+          <td>If your child is removed, CAS must tell you where they are immediately.</td>
+          <td>Immediately upon removal</td>
+          <td><span class="law-tag">CYFSA s.84</span></td>
+        </tr>
+        <tr>
+          <td>Right to request kinship placement</td>
+          <td>You can name a family member or trusted person to take your child instead of a stranger foster home. CAS must consider it.</td>
+          <td>Immediately upon removal</td>
+          <td><span class="law-tag">CYFSA s.74(3)</span></td>
+        </tr>
+        <tr>
+          <td>Right to a hearing within 5 days of removal</td>
+          <td>CAS must bring your child before a court within 5 days of removal. You must be notified and can attend.</td>
+          <td>After emergency removal</td>
+          <td><span class="law-tag">CYFSA s.84(5)</span></td>
+        </tr>
+        <tr>
+          <td>Right to access your child</td>
+          <td>Unless a court orders otherwise, you have the right to see and speak with your child while they are in CAS care.</td>
+          <td>While child is in care</td>
+          <td><span class="law-tag">CYFSA s.104</span></td>
+        </tr>
+        <tr>
+          <td>Right to full disclosure of CAS records</td>
+          <td>Your lawyer can demand your entire CAS file — all notes, assessments, the original complaint. This must be provided before court.</td>
+          <td>Once court proceedings begin</td>
+          <td><span class="law-tag">FLR Rule 20</span> <span class="law-tag">CYFSA s.312</span></td>
+        </tr>
+        <tr>
+          <td>Right to challenge conditions of a court order</td>
+          <td>Supervision order conditions must be the least restrictive option. You can challenge conditions that are excessive or unnecessary.</td>
+          <td>At the hearing where conditions are set</td>
+          <td><span class="law-tag">CYFSA s.101</span> <span class="law-tag">CYFSA s.1(2)</span></td>
+        </tr>
+        <tr>
+          <td>Right to appeal within 30 days</td>
+          <td>Any court order can be appealed to a higher court within 30 days. After 30 days you need special permission.</td>
+          <td>Within 30 days of each order</td>
+          <td><span class="law-tag">CYFSA s.121</span></td>
+        </tr>
+        <tr>
+          <td>Right to bring a motion to change</td>
+          <td>When your circumstances change, you can return to court to ask for the order to be changed or ended.</td>
+          <td>After any order is made</td>
+          <td><span class="law-tag">CYFSA s.115</span></td>
+        </tr>
+        <tr>
+          <td>Right to status review</td>
+          <td>CAS must return to court regularly to justify continued wardship. You can challenge the continuation at every review.</td>
+          <td>Every 6–12 months of wardship</td>
+          <td><span class="law-tag">CYFSA s.114</span></td>
+        </tr>
+        <tr>
+          <td>Right to file a CAS complaint</td>
+          <td>Every CAS office must have an internal complaints process. You can also complain to the Minister of Children's Services.</td>
+          <td>Any time</td>
+          <td><span class="law-tag">CYFSA s.109</span></td>
+        </tr>
+        <tr>
+          <td>Right to equality — no discrimination</td>
+          <td>CAS cannot treat you differently because of race, religion, disability, immigration status, poverty, or family structure.</td>
+          <td>Throughout entire process</td>
+          <td><span class="law-tag">Charter s.15</span> <span class="law-tag">OHRC s.1</span></td>
+        </tr>
+        <tr>
+          <td>Right to an Indigenous-specific process (if applicable)</td>
+          <td>Indigenous children and families have additional rights under CYFSA Part X, including band notification, cultural placement priority, and UNDRIP protections.</td>
+          <td>If you identify as Indigenous</td>
+          <td><span class="law-tag">CYFSA Part X</span> <span class="law-tag">UNDRIP</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- WHAT TO SAY AT THE DOOR CHECKLIST -->
+  <div class="section-header">
+    <h2>✅ Your Quick Action Checklist</h2>
+    <p>Print this. Keep it on your fridge. Check off each step when CAS arrives.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 When CAS Knocks — Do This In Order</div>
+    <div class="checklist" id="checklist">
+      <div class="check-item">
+        <input type="checkbox" id="c1" onchange="checkItem(this)">
+        <label for="c1"><strong>DO NOT open the door fully. Speak through the door or a crack.</strong> You do not have to let anyone in. Ask: "Who are you and why are you here?"</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c2" onchange="checkItem(this)">
+        <label for="c2"><strong>Ask to see their ID and write down their name, employee number, and CAS office.</strong> Every CAS worker carries ID. You are entitled to see it.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c3" onchange="checkItem(this)">
+        <label for="c3"><strong>Ask: "Do you have a warrant?"</strong> If yes — ask to read it carefully before doing anything. If no — you do not have to let them in.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c4" onchange="checkItem(this)">
+        <label for="c4"><strong>Say: "I am not consenting to entry into my home."</strong> Say it clearly. Stay calm. Do not argue or raise your voice.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c5" onchange="checkItem(this)">
+        <label for="c5"><strong>Say: "I want to speak with a lawyer before answering any questions."</strong> Then call Legal Aid immediately: 1-800-668-8258.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c6" onchange="checkItem(this)">
+        <label for="c6"><strong>Do NOT sign anything.</strong> If CAS leaves papers, take them. Do not sign. Tell them: "I will have my lawyer review this."</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c7" onchange="checkItem(this)">
+        <label for="c7"><strong>Write everything down immediately after they leave.</strong> Time, date, names, exactly what was said, what they showed you. This is your evidence.</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c8" onchange="checkItem(this)">
+        <label for="c8"><strong>If they insist on entering due to an "emergency" — stay calm, observe everything, say as little as possible, and call a lawyer the moment they leave.</strong></label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c9" onchange="checkItem(this)">
+        <label for="c9"><strong>Start the AI Case Analyzer immediately after.</strong> Upload any documents they left and describe what happened. Get your lawyer report. <a href="analyzer.html">analyzer.html →</a></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- NEVER / ALWAYS -->
+  <div class="card-title" style="margin-bottom:16px">🔴 Never Do — 🟢 Always Do</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-bottom:32px">
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--danger);margin-bottom:12px">🔴 Never Do These</div>
+      <div class="never-grid" style="grid-template-columns:1fr">
+        <div class="never-item"><div class="never-item-title">❌ Never lie to CAS or the court</div><div class="never-item-body">Dishonesty destroys credibility and can result in contempt of court. Tell the truth — but tell it strategically with your lawyer's guidance.</div></div>
+        <div class="never-item"><div class="never-item-title">❌ Never make threats or yell at CAS workers</div><div class="never-item-body">This is documented immediately and used to argue you are dangerous or unstable. Stay calm even when they are wrong.</div></div>
+        <div class="never-item"><div class="never-item-title">❌ Never post about your case on social media</div><div class="never-item-body">CAS monitors Facebook, Instagram, and TikTok. Screenshots of your posts will be in their court materials.</div></div>
+        <div class="never-item"><div class="never-item-title">❌ Never miss court dates or CAS meetings without notice</div><div class="never-item-body">No-shows are treated as non-compliance and seriously hurt your case. If you cannot make it, notify your lawyer in advance.</div></div>
+        <div class="never-item"><div class="never-item-title">❌ Never take your child from placement without a court order</div><div class="never-item-body">This is parental abduction and a criminal offence regardless of how unfair the situation is.</div></div>
+        <div class="never-item"><div class="never-item-title">❌ Never sign a voluntary agreement without a lawyer</div><div class="never-item-body">You already know this one. Say it to yourself again. Do not sign.</div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:700;color:var(--success);margin-bottom:12px">🟢 Always Do These</div>
+      <div class="always-grid" style="grid-template-columns:1fr">
+        <div class="always-item"><div class="always-item-title">✅ Always document everything</div><div class="always-item-body">Every interaction, every date, every name, every word. A dated written record is powerful evidence in court.</div></div>
+        <div class="always-item"><div class="always-item-title">✅ Always follow court orders exactly</div><div class="always-item-body">Even conditions you disagree with — comply while challenging them legally. Breach gives CAS immediate grounds to escalate.</div></div>
+        <div class="always-item"><div class="always-item-title">✅ Always show up to access visits</div><div class="always-item-body">Every access visit you make is evidence of your commitment to your child. Every missed visit is evidence used against you.</div></div>
+        <div class="always-item"><div class="always-item-title">✅ Always show your engagement in your community</div><div class="always-item-body">School involvement, doctor appointments, community programs, church — document your active parenting role.</div></div>
+        <div class="always-item"><div class="always-item-title">✅ Always complete any programs CAS recommends voluntarily</div><div class="always-item-body">Completing a parenting course or counselling — before being ordered to — shows good faith and is powerful in court.</div></div>
+        <div class="always-item"><div class="always-item-title">✅ Always build your support network on record</div><div class="always-item-body">Letters of support from teachers, doctors, neighbours, religious leaders, coaches. People who know you as a parent. Collect these now.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-warn" style="margin-bottom:24px">
+    <strong>⚠️ This Is Educational Information — Not Legal Advice</strong>
+    This page explains how Ontario child protection law works in general terms. Every case is different. The information here does not replace a qualified Ontario family law lawyer who knows your specific facts. Legal Aid Ontario provides free lawyers in child protection cases: <strong>1-800-668-8258</strong> (24/7, free).
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <a href="analyzer.html" class="btn btn-gold btn-lg">⚖️ Analyze My Case with AI →</a>
+    <a href="emergency.html" class="btn btn-navy">🚨 Emergency Protocol</a>
+    <a href="lawyer.html" class="btn btn-outline">👨‍⚖️ Find a Lawyer</a>
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script>OPD.init('rights');</script>
+<script>
+function toggleTrap(id) {
+  var card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+function expandAll() {
+  document.querySelectorAll('.trap-card').forEach(function(c) { c.classList.add('open'); });
+}
+function checkItem(cb) {
+  var item = cb.closest('.check-item');
+  if (cb.checked) { item.classList.add('checked-item'); }
+  else { item.classList.remove('checked-item'); }
+}
+function copyScript(btn) {
+  var text = btn.parentElement.querySelector('p').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() { btn.textContent = 'Copied!'; setTimeout(function(){ btn.textContent = 'Copy'; }, 2000); });
+  } else {
+    var ta = document.createElement('textarea'); ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = 'Copied!'; setTimeout(function(){ btn.textContent = 'Copy'; }, 2000);
+  }
+}
+</script>
+</body>
+</html>

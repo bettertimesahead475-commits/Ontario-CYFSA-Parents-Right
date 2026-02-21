@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Evidence File Builder — Ontario Parent Defense</title>
+  <meta name="description" content="Organize your CAS case evidence into a professional package your lawyer can use immediately. Export as PDF.">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .ev-section { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--sh); }
+    .field-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .field-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
+    .field-label { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .field-input { padding: 10px 13px; border: 1.5px solid var(--line); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); outline: none; transition: border-color .2s; }
+    .field-input:focus { border-color: var(--navy-mid); background: var(--white); }
+    .field-input::placeholder { color: #aab; }
+    textarea.field-input { min-height: 90px; resize: vertical; line-height: 1.6; }
+    .evidence-items { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+    .ev-item { background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+    .ev-item-num { background: var(--navy); color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+    .ev-item-body { flex: 1; min-width: 0; }
+    .ev-item-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--gold); margin-bottom: 4px; }
+    .ev-item-title { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+    .ev-item-date { font-size: 12px; color: var(--muted); }
+    .ev-item-notes { font-size: 13px; color: var(--text); margin-top: 5px; line-height: 1.5; }
+    .ev-item-delete { background: none; border: none; cursor: pointer; font-size: 16px; color: var(--muted); padding: 4px; border-radius: 4px; flex-shrink: 0; transition: .15s; }
+    .ev-item-delete:hover { color: var(--danger); background: var(--danger-bg); }
+    .type-select { padding: 10px 13px; border: 1.5px solid var(--line); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--cream); outline: none; transition: border-color .2s; cursor: pointer; }
+    .type-select:focus { border-color: var(--navy-mid); }
+    .add-btn { display: flex; align-items: center; gap: 7px; padding: 10px 18px; border-radius: 8px; border: 1.5px dashed var(--navy-mid); background: var(--info-bg); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; transition: all .18s; width: 100%; justify-content: center; margin-top: 10px; }
+    .add-btn:hover { background: var(--navy); color: #fff; border-style: solid; }
+    .export-bar { position: sticky; bottom: 20px; background: var(--white); border: 2px solid var(--navy); border-radius: var(--radius); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; box-shadow: var(--sh-lg); flex-wrap: wrap; z-index: 50; }
+    .export-bar-left h3 { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--navy); margin-bottom: 2px; }
+    .export-bar-left p { font-size: 13px; color: var(--muted); }
+    .export-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .progress-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .chip { background: var(--cream); border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--muted); }
+    .chip.done { background: var(--success-bg); border-color: #86efac; color: var(--success); }
+    .chip.active { background: var(--info-bg); border-color: #93c5fd; color: var(--info); }
+    .photo-upload-zone { border: 2px dashed var(--line); border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: all .2s; background: #fafbff; position: relative; margin-top: 10px; }
+    .photo-upload-zone:hover { border-color: var(--navy-mid); background: #f0f5ff; }
+    .photo-upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-top: 12px; }
+    .photo-thumb { border-radius: 8px; overflow: hidden; border: 2px solid var(--line); position: relative; aspect-ratio: 1; }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-thumb .remove-photo { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,.6); color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .importance-sel { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .importance-btn { padding: 6px 12px; border-radius: 6px; border: 1.5px solid var(--line); background: var(--cream); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .15s; color: var(--muted); }
+    .importance-btn.selected.high { background: var(--danger-bg); border-color: #fca5a5; color: var(--danger); }
+    .importance-btn.selected.medium { background: var(--warn-bg); border-color: #fcd34d; color: var(--warn); }
+    .importance-btn.selected.low { background: var(--success-bg); border-color: #86efac; color: var(--success); }
+  </style>
+</head>
+<body>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-stamp">📁 Evidence Organizer · Export to PDF</div>
+    <h1><em>Evidence File</em> Builder</h1>
+    <p>Organize your photos, screenshots, documents, and notes into a professional evidence package. Print or export as PDF to give directly to your lawyer.</p>
+  </div>
+</div>
+<div class="gold-rule"></div>
+
+<main class="page-main">
+
+  <div class="alert alert-info" style="margin-bottom:22px">
+    <strong>📌 How to use this tool</strong>
+    Fill in your case details, then add each piece of evidence. When done, click "Export as PDF" — print the page or save as PDF using your browser's print function. Everything stays in your browser — nothing is uploaded anywhere.
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-chips">
+    <div class="chip active" id="chip1">① Case Details</div>
+    <div class="chip" id="chip2">② Key Dates</div>
+    <div class="chip" id="chip3">③ Evidence Items</div>
+    <div class="chip" id="chip4">④ Photos</div>
+    <div class="chip" id="chip5">⑤ Statement</div>
+  </div>
+
+  <!-- SECTION 1: CASE DETAILS -->
+  <div class="ev-section" id="sec1">
+    <div class="card-title">① Your Case Details</div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">Your Full Name</div>
+        <input class="field-input" type="text" id="parentName" placeholder="Jane Smith" oninput="updateChip(1)">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Child(ren)'s Name(s) & Age(s)</div>
+        <input class="field-input" type="text" id="childName" placeholder="Emily (7), James (4)">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">CAS Office / Worker Name</div>
+        <input class="field-input" type="text" id="casWorker" placeholder="Toronto CAS · Worker: Sarah Johnson">
+      </div>
+      <div class="field-group">
+        <div class="field-label">File / Case Number (if known)</div>
+        <input class="field-input" type="text" id="caseNum" placeholder="CAS-2026-XXXXX">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">Date of First CAS Contact</div>
+        <input class="field-input" type="date" id="firstContact">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Next Court Date (if known)</div>
+        <input class="field-input" type="date" id="courtDate">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">Your Lawyer's Name & Phone</div>
+        <input class="field-input" type="text" id="lawyerName" placeholder="John Doe · 416-555-0100">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Alleged Reason for CAS Involvement</div>
+        <input class="field-input" type="text" id="casReason" placeholder="As stated by CAS worker">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: KEY DATES -->
+  <div class="ev-section" id="sec2">
+    <div class="card-title">② Key Dates & Events Timeline</div>
+    <div id="datesContainer">
+      <div class="evidence-items" id="datesList"></div>
+    </div>
+    <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">Add a Date / Event:</div>
+      <div class="field-row">
+        <div class="field-group" style="max-width:160px">
+          <div class="field-label">Date</div>
+          <input class="field-input" type="date" id="newDate">
+        </div>
+        <div class="field-group">
+          <div class="field-label">What Happened</div>
+          <input class="field-input" type="text" id="newDateDesc" placeholder="e.g. CAS worker visited home unannounced">
+        </div>
+        <div class="field-group" style="max-width:160px">
+          <div class="field-label">Type</div>
+          <select class="type-select" id="newDateType">
+            <option>CAS Visit</option>
+            <option>CAS Letter</option>
+            <option>Court Date</option>
+            <option>Phone Call</option>
+            <option>Removal</option>
+            <option>Access Visit</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addDate()">+ Add to Timeline</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3: EVIDENCE ITEMS -->
+  <div class="ev-section" id="sec3">
+    <div class="card-title">③ Evidence Documents & Items</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:14px">List each piece of evidence you have. This becomes the evidence index your lawyer uses.</p>
+    <div class="evidence-items" id="evidenceList"></div>
+
+    <div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">Add an Evidence Item:</div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Item Title / Description</div>
+          <input class="field-input" type="text" id="evTitle" placeholder="e.g. CAS letter dated January 5, 2026">
+        </div>
+        <div class="field-group" style="max-width:160px">
+          <div class="field-label">Type</div>
+          <select class="type-select" id="evType">
+            <option>Letter / Document</option>
+            <option>Photo / Screenshot</option>
+            <option>Medical Record</option>
+            <option>School Record</option>
+            <option>Text / Email</option>
+            <option>Witness Statement</option>
+            <option>Court Document</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field-group" style="max-width:140px">
+          <div class="field-label">Date of Item</div>
+          <input class="field-input" type="date" id="evDate">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Why This Evidence Matters</div>
+          <textarea class="field-input" id="evNotes" placeholder="Explain what this proves or disproves..."></textarea>
+        </div>
+        <div class="field-group" style="max-width:160px">
+          <div class="field-label">Importance</div>
+          <div class="importance-sel">
+            <button class="importance-btn high" onclick="selectImportance('high', this)">🔴 High</button>
+            <button class="importance-btn medium selected medium" onclick="selectImportance('medium', this)">🟡 Medium</button>
+            <button class="importance-btn low" onclick="selectImportance('low', this)">🟢 Low</button>
+          </div>
+        </div>
+      </div>
+      <button class="add-btn" onclick="addEvidence()">+ Add Evidence Item</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: PHOTOS -->
+  <div class="ev-section" id="sec4">
+    <div class="card-title">④ Photo Evidence</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:10px">Upload photos of evidence — CAS letters, living conditions, injuries, screenshots. These appear in your exported report.</p>
+    <div class="photo-upload-zone">
+      <input type="file" id="photoInput" multiple accept="image/*" onchange="addPhotos(this.files)">
+      <div style="font-size:30px;margin-bottom:8px">📸</div>
+      <div style="font-size:14px;font-weight:600;color:var(--navy)">Drop photos here or click to browse</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">JPG, PNG, screenshots — all supported</div>
+    </div>
+    <div class="photo-grid" id="photoGrid"></div>
+  </div>
+
+  <!-- SECTION 5: STATEMENT -->
+  <div class="ev-section" id="sec5">
+    <div class="card-title">⑤ Your Statement — In Your Own Words</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:14px">Write your account of what happened. Be factual, specific, and include dates. This is your narrative for your lawyer.</p>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">What CAS Did / Said — Full Account</div>
+        <textarea class="field-input" id="stmtCAS" style="min-height:120px" placeholder="Describe every interaction with CAS — what they said, what they did, how they treated you..."></textarea>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">Your Response / Side of the Story</div>
+        <textarea class="field-input" id="stmtYours" style="min-height:120px" placeholder="What actually happened? What is your explanation? What were you doing to protect your child?"></textarea>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">Witnesses Who Can Support You</div>
+        <textarea class="field-input" id="stmtWitnesses" placeholder="Names, relationship, what they witnessed, and contact info..."></textarea>
+      </div>
+      <div class="field-group">
+        <div class="field-label">What Support Services You Use / Have Used</div>
+        <textarea class="field-input" id="stmtServices" placeholder="Doctors, counsellors, food bank, housing supports, parenting programs..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT BAR -->
+  <div class="export-bar">
+    <div class="export-bar-left">
+      <h3>📋 Ready to Export Your Evidence File</h3>
+      <p id="exportSummary">Fill in the sections above, then export.</p>
+    </div>
+    <div class="export-btns">
+      <button class="btn btn-gold btn-lg" onclick="exportPDF()">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-navy" onclick="exportHTML()">⬇️ Download HTML</button>
+    </div>
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script>
+'use strict';
+OPD.init('evidence');
+
+var dates = [];
+var evidenceItems = [];
+var photos = [];
+var selectedImportance = 'medium';
+
+function updateChip(n) {
+  document.getElementById('chip' + n).className = 'chip done';
+  updateSummary();
+}
+
+function updateSummary() {
+  var name = document.getElementById('parentName').value;
+  var evCount = evidenceItems.length;
+  var dateCount = dates.length;
+  document.getElementById('exportSummary').textContent =
+    (name ? name + ' · ' : '') + evCount + ' evidence items · ' + dateCount + ' timeline events · ' + photos.length + ' photos';
+}
+
+/* ── DATES ── */
+function addDate() {
+  var d = document.getElementById('newDate').value;
+  var desc = document.getElementById('newDateDesc').value.trim();
+  var type = document.getElementById('newDateType').value;
+  if (!d && !desc) { alert('Please enter a date or description.'); return; }
+  dates.push({ date: d, desc: desc, type: type });
+  dates.sort(function(a, b) { return a.date.localeCompare(b.date); });
+  document.getElementById('newDate').value = '';
+  document.getElementById('newDateDesc').value = '';
+  renderDates();
+  updateChip(2);
+  updateSummary();
+}
+
+function removeDate(i) { dates.splice(i, 1); renderDates(); updateSummary(); }
+
+function renderDates() {
+  var list = document.getElementById('datesList');
+  if (!dates.length) { list.innerHTML = '<p style="font-size:14px;color:var(--muted);text-align:center;padding:12px">No events added yet.</p>'; return; }
+  list.innerHTML = dates.map(function(d, i) {
+    var dateStr = d.date ? new Date(d.date + 'T12:00:00').toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+    return '<div class="ev-item"><div class="ev-item-num">' + (i + 1) + '</div><div class="ev-item-body">'
+      + '<div class="ev-item-type">' + d.type + '</div>'
+      + '<div class="ev-item-title">' + (d.desc || 'No description') + '</div>'
+      + (dateStr ? '<div class="ev-item-date">' + dateStr + '</div>' : '')
+      + '</div><button class="ev-item-delete" onclick="removeDate(' + i + ')">✕</button></div>';
+  }).join('');
+}
+
+/* ── EVIDENCE ── */
+function selectImportance(level, btn) {
+  selectedImportance = level;
+  document.querySelectorAll('.importance-btn').forEach(function(b) { b.classList.remove('selected', 'high', 'medium', 'low'); });
+  btn.classList.add('selected', level);
+}
+
+function addEvidence() {
+  var title = document.getElementById('evTitle').value.trim();
+  var type = document.getElementById('evType').value;
+  var date = document.getElementById('evDate').value;
+  var notes = document.getElementById('evNotes').value.trim();
+  if (!title) { alert('Please enter a title or description.'); return; }
+  evidenceItems.push({ title: title, type: type, date: date, notes: notes, importance: selectedImportance });
+  document.getElementById('evTitle').value = '';
+  document.getElementById('evDate').value = '';
+  document.getElementById('evNotes').value = '';
+  renderEvidence();
+  updateChip(3);
+  updateSummary();
+}
+
+function removeEvidence(i) { evidenceItems.splice(i, 1); renderEvidence(); updateSummary(); }
+
+function renderEvidence() {
+  var list = document.getElementById('evidenceList');
+  if (!evidenceItems.length) { list.innerHTML = '<p style="font-size:14px;color:var(--muted);text-align:center;padding:12px">No evidence items added yet.</p>'; return; }
+  list.innerHTML = evidenceItems.map(function(e, i) {
+    var impColor = e.importance === 'high' ? 'var(--danger)' : e.importance === 'low' ? 'var(--success)' : 'var(--gold)';
+    var impLabel = e.importance === 'high' ? '🔴 HIGH' : e.importance === 'low' ? '🟢 LOW' : '🟡 MEDIUM';
+    var dateStr = e.date ? new Date(e.date + 'T12:00:00').toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+    return '<div class="ev-item" style="border-left:3px solid ' + impColor + '">'
+      + '<div class="ev-item-num">' + String.fromCharCode(64 + i + 1) + '</div>'
+      + '<div class="ev-item-body">'
+      + '<div class="ev-item-type">' + e.type + ' · ' + impLabel + '</div>'
+      + '<div class="ev-item-title">' + e.title + '</div>'
+      + (dateStr ? '<div class="ev-item-date">' + dateStr + '</div>' : '')
+      + (e.notes ? '<div class="ev-item-notes">' + e.notes + '</div>' : '')
+      + '</div><button class="ev-item-delete" onclick="removeEvidence(' + i + ')">✕</button></div>';
+  }).join('');
+}
+
+/* ── PHOTOS ── */
+function addPhotos(files) {
+  Array.from(files).forEach(function(f) {
+    if (photos.length >= 20) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      photos.push({ name: f.name, dataUrl: e.target.result });
+      renderPhotos();
+      updateChip(4);
+      updateSummary();
+    };
+    reader.readAsDataURL(f);
+  });
+  document.getElementById('photoInput').value = '';
+}
+
+function removePhoto(i) { photos.splice(i, 1); renderPhotos(); updateSummary(); }
+
+function renderPhotos() {
+  var grid = document.getElementById('photoGrid');
+  if (!photos.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = photos.map(function(p, i) {
+    return '<div class="photo-thumb"><img src="' + p.dataUrl + '" alt="' + p.name + '"><button class="remove-photo" onclick="removePhoto(' + i + ')">✕</button></div>';
+  }).join('');
+}
+
+/* ── EXPORT ── */
+function buildReportHTML(forPrint) {
+  var name    = document.getElementById('parentName').value || 'Parent';
+  var child   = document.getElementById('childName').value || '';
+  var worker  = document.getElementById('casWorker').value || '';
+  var caseNum = document.getElementById('caseNum').value || '';
+  var firstC  = document.getElementById('firstContact').value;
+  var courtD  = document.getElementById('courtDate').value;
+  var lawyer  = document.getElementById('lawyerName').value || '';
+  var reason  = document.getElementById('casReason').value || '';
+  var stmtCAS = document.getElementById('stmtCAS').value || '';
+  var stmtYrs = document.getElementById('stmtYours').value || '';
+  var stmtWit = document.getElementById('stmtWitnesses').value || '';
+  var stmtSvc = document.getElementById('stmtServices').value || '';
+
+  function fmt(d) { return d ? new Date(d + 'T12:00:00').toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not specified'; }
+  function esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var photosHtml = photos.length ? '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px">' + photos.map(function(p, i) {
+    return '<div style="break-inside:avoid"><img src="' + p.dataUrl + '" style="width:100%;border-radius:6px;border:1px solid #dde5f0" alt="Photo ' + (i+1) + '"><div style="font-size:11px;color:#5e718a;margin-top:3px">Photo ' + (i+1) + ': ' + esc(p.name) + '</div></div>';
+  }).join('') + '</div>' : '<p style="color:#5e718a;font-size:14px">No photos uploaded.</p>';
+
+  var datesHtml = dates.length ? '<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">#</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Date</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Type</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Event</th></tr></thead><tbody>'
+    + dates.map(function(d,i){return '<tr style="background:'+(i%2===0?'#fff':'#f8faff')+'"><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+(i+1)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+fmt(d.date)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+esc(d.type)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+esc(d.desc)+'</td></tr>';}).join('')
+    + '</tbody></table>' : '<p style="color:#5e718a;font-size:14px">No timeline events added.</p>';
+
+  var evHtml = evidenceItems.length ? '<table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Ref</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Title</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Type</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Date</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Importance</th><th style="background:#0b1e3f;color:#fff;padding:8px 10px;text-align:left">Notes</th></tr></thead><tbody>'
+    + evidenceItems.map(function(e,i){var imp=e.importance==='high'?'🔴 HIGH':e.importance==='low'?'🟢 LOW':'🟡 MEDIUM';return '<tr style="background:'+(i%2===0?'#fff':'#f8faff')+'"><td style="padding:8px 10px;border-bottom:1px solid #dde5f0;font-weight:700">'+String.fromCharCode(65+i)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+esc(e.title)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+esc(e.type)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+fmt(e.date)+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+imp+'</td><td style="padding:8px 10px;border-bottom:1px solid #dde5f0">'+esc(e.notes)+'</td></tr>';}).join('')
+    + '</tbody></table>' : '<p style="color:#5e718a;font-size:14px">No evidence items added.</p>';
+
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Evidence File — ' + esc(name) + '</title><style>'
+    + 'body{font-family:Arial,sans-serif;max-width:900px;margin:40px auto;padding:20px;color:#1a2740;background:#fff;line-height:1.6}'
+    + 'h1{font-size:24px;color:#0b1e3f;margin:0}h2{font-size:18px;color:#0b1e3f;margin:24px 0 12px;padding-bottom:6px;border-bottom:2px solid #dde5f0}'
+    + '.header{background:linear-gradient(135deg,#0b1e3f,#163469);color:#fff;border-radius:10px;padding:24px 28px;margin-bottom:28px}'
+    + '.header p{color:rgba(255,255,255,.7);font-size:13px;margin:3px 0}'
+    + '.meta-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px}'
+    + '.meta-item{background:#f8faff;border:1px solid #dde5f0;border-radius:8px;padding:12px 14px}'
+    + '.meta-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#5e718a;margin-bottom:4px}'
+    + '.meta-value{font-size:15px;font-weight:600;color:#0b1e3f}'
+    + '.stmt{background:#faf8f4;border:1px solid #dde5f0;border-radius:8px;padding:16px;font-size:14px;white-space:pre-wrap;margin-bottom:12px}'
+    + '.disclaimer{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;font-size:12px;color:#92400e;margin-top:24px}'
+    + '@media print{body{margin:0;padding:10px}}'
+    + '</style></head><body>'
+    + '<div class="header"><h1>⚖️ Evidence File — ' + esc(name) + '</h1><p>Ontario Parent Defense · Prepared: ' + new Date().toLocaleString('en-CA') + '</p><p>CONFIDENTIAL — For Lawyer Use Only</p></div>'
+    + '<h2>Case Details</h2><div class="meta-grid">'
+    + '<div class="meta-item"><div class="meta-label">Parent / Guardian</div><div class="meta-value">' + esc(name) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">Child(ren)</div><div class="meta-value">' + esc(child) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">CAS Worker / Office</div><div class="meta-value">' + esc(worker) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">Case Number</div><div class="meta-value">' + esc(caseNum) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">First CAS Contact</div><div class="meta-value">' + fmt(firstC) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">Next Court Date</div><div class="meta-value">' + fmt(courtD) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">My Lawyer</div><div class="meta-value">' + esc(lawyer) + '</div></div>'
+    + '<div class="meta-item"><div class="meta-label">Alleged CAS Reason</div><div class="meta-value">' + esc(reason) + '</div></div>'
+    + '</div>'
+    + '<h2>Timeline of Events</h2>' + datesHtml
+    + '<h2>Evidence Index</h2>' + evHtml
+    + '<h2>Photo Evidence</h2>' + photosHtml
+    + '<h2>My Statement — What CAS Did</h2><div class="stmt">' + esc(stmtCAS) + '</div>'
+    + '<h2>My Statement — My Side of the Story</h2><div class="stmt">' + esc(stmtYrs) + '</div>'
+    + (stmtWit ? '<h2>Witnesses</h2><div class="stmt">' + esc(stmtWit) + '</div>' : '')
+    + (stmtSvc ? '<h2>Support Services</h2><div class="stmt">' + esc(stmtSvc) + '</div>' : '')
+    + '<div class="disclaimer">⚠️ This document was prepared using the Ontario Parent Defense Evidence File Builder. It contains general information and is not legal advice. Always review with a qualified Ontario lawyer. Legal Aid Ontario: 1-800-668-8258</div>'
+    + '</body></html>';
+}
+
+function exportPDF() {
+  var html = buildReportHTML(true);
+  var w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  setTimeout(function() { w.print(); }, 500);
+}
+
+function exportHTML() {
+  var name = document.getElementById('parentName').value || 'Case';
+  var html = buildReportHTML(false);
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'Evidence-File-' + name.replace(/\s+/g, '-') + '-' + new Date().toISOString().slice(0, 10) + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// Init
+renderDates();
+renderEvidence();
+</script>
+</body>
+</html>

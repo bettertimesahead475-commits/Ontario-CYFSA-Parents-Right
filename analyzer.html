@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Case Analyzer — Ontario Parent Defense</title>
+  <meta name="description" content="Free AI-powered CAS case analyzer for Ontario parents. Upload documents, photos, screenshots. Powered by Google Gemini — no API key needed.">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .api-status{font-size:13px;font-weight:600;margin-top:10px;padding:10px 14px;border-radius:8px;display:none}
+    .api-status.ok{display:block;background:var(--success-bg);color:var(--success);border:1px solid #86efac}
+    .api-status.err{display:block;background:var(--danger-bg);color:var(--danger);border:1px solid #fca5a5}
+    .api-status.checking{display:block;background:var(--warn-bg);color:var(--warn);border:1px solid #fcd34d}
+    .steps-row{display:flex;gap:10px;margin-bottom:22px;flex-wrap:wrap}
+    .step{flex:1;min-width:140px;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;box-shadow:var(--sh);transition:all .2s}
+    .step.active{border-color:var(--navy-mid);box-shadow:0 0 0 3px rgba(22,52,105,.12)}
+    .step.done{border-color:#059669;background:var(--success-bg)}
+    .step-num{width:30px;height:30px;border:2px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);margin:0 auto 8px;transition:all .2s}
+    .step.active .step-num{background:var(--navy);border-color:var(--navy);color:#fff}
+    .step.done .step-num{background:#059669;border-color:#059669;color:#fff}
+    .step h4{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:3px}
+    .step p{font-size:11px;color:var(--muted)}
+    .situation-area{width:100%;min-height:140px;padding:14px;border:1.5px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);background:var(--cream);resize:vertical;outline:none;transition:border-color .2s;line-height:1.65}
+    .situation-area:focus{border-color:var(--navy-mid);background:var(--white)}
+    .situation-area::placeholder{color:#9ab}
+    .char-count{font-size:12px;color:var(--muted);text-align:right;margin-top:5px}
+    .upload-zone{border:2px dashed var(--line);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#fafbff;position:relative}
+    .upload-zone:hover,.upload-zone.drag{border-color:var(--navy-mid);background:#f0f5ff}
+    .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .upload-icon{font-size:36px;margin-bottom:10px}
+    .upload-zone h4{font-size:15px;font-weight:600;color:var(--navy);margin-bottom:5px}
+    .upload-zone p{font-size:13px;color:var(--muted)}
+    .fmt-tags{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .fmt-tag{background:var(--navy);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:4px}
+    .fmt-tag.gold{background:var(--gold)}
+    .file-list{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+    .file-item{display:flex;align-items:center;gap:10px;background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+    .file-thumb{width:42px;height:42px;border-radius:6px;object-fit:cover;flex-shrink:0;border:1px solid var(--line)}
+    .file-thumb-icon{width:42px;height:42px;border-radius:6px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .file-info{flex:1;min-width:0}
+    .file-name{font-size:13px;font-weight:600;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .file-meta{font-size:11px;color:var(--muted);margin-top:2px}
+    .file-desc-input{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);margin-top:5px;outline:none}
+    .file-desc-input:focus{border-color:var(--navy-mid)}
+    .file-remove{background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted);padding:4px;border-radius:4px;transition:.15s;flex-shrink:0}
+    .file-remove:hover{color:var(--danger);background:var(--danger-bg)}
+    .file-status{font-size:11px;font-weight:600;margin-top:3px}
+    .file-status.ok{color:var(--success)}.file-status.err{color:var(--danger)}.file-status.loading{color:var(--gold)}
+    .analyze-btn{width:100%;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);color:#fff;border:none;padding:18px 32px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:17px;cursor:pointer;transition:all .2s;box-shadow:var(--sh-md);display:flex;align-items:center;justify-content:center;gap:10px;margin-top:20px}
+    .analyze-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:var(--sh-lg)}
+    .analyze-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+    .progress-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:28px;margin-bottom:22px;box-shadow:var(--sh);display:none}
+    .progress-card.visible{display:block}
+    .progress-title{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--navy);margin-bottom:18px;text-align:center}
+    .p-step{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:8px;background:var(--cream);border:1px solid var(--line);transition:all .3s;margin-bottom:8px}
+    .p-step.active{background:var(--info-bg);border-color:#93c5fd}
+    .p-step.done{background:var(--success-bg);border-color:#86efac}
+    .p-step-icon{font-size:18px;flex-shrink:0}.p-step-text{flex:1;font-size:14px;font-weight:500}.p-step-status{font-size:16px;flex-shrink:0}
+    .report-card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:28px;margin-bottom:22px;box-shadow:var(--sh);display:none}
+    .report-card.visible{display:block}
+    .report-header{background:linear-gradient(135deg,var(--navy),var(--navy-mid));color:#fff;border-radius:10px;padding:22px 26px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .report-header h2{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:800;margin:0}
+    .report-header p{font-size:13px;color:rgba(255,255,255,.65);margin:3px 0 0}
+    .report-date{font-size:12px;color:rgba(255,255,255,.45);margin-top:5px}
+    .report-content{font-size:15px;line-height:1.75;color:var(--text);white-space:pre-wrap}
+    .rights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:4px}
+    .right-pill{background:var(--danger-bg);border:1px solid #fca5a5;border-radius:8px;padding:10px 13px;font-size:13px;color:#7f1d1d}
+    .right-pill.moderate{background:var(--warn-bg);border-color:#fcd34d;color:var(--warn)}
+    .right-pill.monitor{background:var(--info-bg);border-color:#93c5fd;color:var(--info)}
+    .right-pill.ok{background:var(--success-bg);border-color:#86efac;color:var(--success)}
+    .right-pill-title{font-weight:700;margin-bottom:3px}.right-pill-desc{font-size:12px;opacity:.9;line-height:1.5}
+    .defense-list{display:flex;flex-direction:column;gap:9px}
+    .defense-item{background:var(--cream);border:1px solid var(--line);border-left:4px solid var(--navy-mid);border-radius:0 8px 8px 0;padding:13px 15px}
+    .defense-item.strong{border-left-color:var(--success)}.defense-item.medium{border-left-color:var(--gold)}
+    .defense-rank{font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:700;color:var(--muted);margin-bottom:4px}
+    .defense-rank.strong{color:var(--success)}.defense-rank.medium{color:var(--gold)}
+    .defense-text{font-size:14px;line-height:1.65}
+    .steps-list{display:flex;flex-direction:column;gap:9px}
+    .next-step{display:flex;align-items:flex-start;gap:12px;background:var(--cream);border:1px solid var(--line);border-radius:8px;padding:13px 15px}
+    .next-step-num{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px}
+    .next-step-text{font-size:14px;line-height:1.65}
+    .urgency-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:2px 7px;border-radius:4px;margin-left:5px;vertical-align:middle}
+    .urgency-tag.urgent{background:var(--danger-bg);color:var(--danger)}
+    .urgency-tag.soon{background:var(--warn-bg);color:var(--warn)}
+    .urgency-tag.when-able{background:var(--info-bg);color:var(--info)}
+    .evidence-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+    .evidence-table th{background:var(--navy);color:#fff;padding:9px 11px;text-align:left;font-size:12px;font-weight:600}
+    .evidence-table td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+    .evidence-table tr:last-child td{border-bottom:none}
+    .evidence-table tr:nth-child(even) td{background:#f8faff}
+    .download-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:2px solid var(--line)}
+    .api-card{background:var(--white);border:2px solid var(--gold-pale);border-radius:14px;padding:22px 26px;margin-bottom:22px;box-shadow:var(--sh)}
+    .api-card h3{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--navy);margin-bottom:5px}
+    .api-card .sub{font-size:14px;color:var(--muted);margin-bottom:13px;line-height:1.6}
+    .api-card a{color:var(--navy-mid);font-weight:600}
+    .api-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .api-input{flex:1;min-width:220px;padding:11px 15px;border:1.5px solid var(--line);border-radius:8px;font-family:'Courier New',monospace;font-size:13px;color:var(--text);background:var(--cream);outline:none;transition:border-color .2s}
+    .api-input:focus{border-color:var(--navy-mid);background:var(--white)}
+    .api-input::placeholder{color:#aab}
+    .free-badge{display:inline-flex;align-items:center;gap:6px;background:var(--success-bg);border:1px solid #86efac;color:var(--success);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:14px}
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-stamp"><span class="pulse"></span> Powered by Google Gemini · Free</div>
+    <h1>AI <em>Case Analyzer</em></h1>
+    <p>Upload your CAS documents, photos, and screenshots. Get an instant lawyer-ready report — Charter rights flagged, defense strategies ranked, next steps outlined. 100% free — no key needed.</p>
+  </div>
+</div>
+<div class="gold-rule"></div>
+
+<main class="page-main">
+
+  <!-- FREE BADGE -->
+  <div class="free-badge">✅ Completely Free — Powered by Google Gemini · No account needed · No API key required</div>
+
+  <!-- API KEY CARD (Gemini - get own key or use free) -->
+  <div class="api-card">
+    <h3>🤖 Google Gemini API — Free Setup</h3>
+    <p class="sub">
+      Get your <strong>free</strong> Google Gemini API key in 60 seconds:
+      <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> →
+      Click <strong>"Create API Key"</strong> → paste it below. Free tier: 1,500 analyses/day. No credit card needed.
+    </p>
+    <div class="api-row">
+      <input class="api-input" type="password" id="apiKey" placeholder="AIza..." autocomplete="off" spellcheck="false">
+      <button class="btn btn-navy" id="connectBtn" onclick="testKey()">Connect →</button>
+    </div>
+    <div class="api-status" id="apiStatus"></div>
+  </div>
+
+  <!-- ERROR BOX -->
+  <div class="alert alert-danger" id="errorBox" style="display:none">
+    <strong>❌ Error</strong><span id="errorMsg"></span>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-row">
+    <div class="step active" id="step1"><div class="step-num">1</div><h4>Describe Situation</h4><p>What's happening</p></div>
+    <div class="step" id="step2"><div class="step-num">2</div><h4>Upload Evidence</h4><p>Docs, photos, files</p></div>
+    <div class="step" id="step3"><div class="step-num">3</div><h4>AI Analysis</h4><p>Gemini reviews it</p></div>
+    <div class="step" id="step4"><div class="step-num">4</div><h4>Lawyer Report</h4><p>Download & share</p></div>
+  </div>
+
+  <!-- SITUATION -->
+  <div class="card">
+    <div class="card-title">📝 Step 1 — Describe Your Situation</div>
+    <textarea class="situation-area" id="situationText" oninput="updateCount()" placeholder="Describe what is happening with CAS. For example:&#10;&#10;• When did CAS first contact you and why?&#10;• What have they told you or done (visits, letters, removal)?&#10;• What court dates or orders are already in place?&#10;• What are you most worried about?&#10;&#10;The more detail you give, the more accurate your analysis will be."></textarea>
+    <div class="char-count" id="charCount">0 characters</div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="card">
+    <div class="card-title">📁 Step 2 — Upload Your Evidence Files</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:14px">Upload CAS letters, court orders, photos, or screenshots. Add a description to each file so the AI knows what it's looking at.</p>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" multiple accept="image/*,.pdf,.txt,.doc,.docx" onchange="handleFiles(this.files)">
+      <div class="upload-icon">📂</div>
+      <h4>Drop files here or click to browse</h4>
+      <p>Supported formats:</p>
+      <div class="fmt-tags">
+        <span class="fmt-tag">JPG / PNG</span>
+        <span class="fmt-tag gold">HEIC / iPhone</span>
+        <span class="fmt-tag">Screenshots</span>
+        <span class="fmt-tag">PDF</span>
+        <span class="fmt-tag">TXT</span>
+      </div>
+      <p style="margin-top:8px;font-size:12px;color:#aab">Max 10 files · 20MB each</p>
+    </div>
+    <div class="file-list" id="fileList"></div>
+  </div>
+
+  <!-- ANALYZE BTN -->
+  <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
+    <span style="font-size:22px">⚖️</span>
+    Analyze My Case Free — Generate Lawyer Report
+  </button>
+
+  <div class="alert alert-warn" style="margin-top:12px">
+    <strong>⚠️ Educational Tool Only</strong>
+    This AI provides general legal information based on Ontario law. It is not legal advice. Always consult a qualified Ontario lawyer. Legal Aid Ontario: 1-800-668-8258.
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-card" id="progressCard">
+    <div class="progress-title">🔍 Analyzing Your Case with Google Gemini...</div>
+    <div class="p-step" id="ps1"><span class="p-step-icon">📄</span><span class="p-step-text">Reading your situation and documents</span><span class="p-step-status" id="pss1">⏳</span></div>
+    <div class="p-step" id="ps2"><span class="p-step-icon">🛡️</span><span class="p-step-text">Identifying Charter rights potentially violated</span><span class="p-step-status" id="pss2">⏳</span></div>
+    <div class="p-step" id="ps3"><span class="p-step-icon">📜</span><span class="p-step-text">Cross-referencing CYFSA sections and Ontario law</span><span class="p-step-status" id="pss3">⏳</span></div>
+    <div class="p-step" id="ps4"><span class="p-step-icon">🎯</span><span class="p-step-text">Ranking defense strategies by strength</span><span class="p-step-status" id="pss4">⏳</span></div>
+    <div class="p-step" id="ps5"><span class="p-step-icon">📋</span><span class="p-step-text">Compiling your lawyer-ready report</span><span class="p-step-status" id="pss5">⏳</span></div>
+  </div>
+
+  <!-- REPORT -->
+  <div class="report-card" id="reportCard">
+    <div class="report-header">
+      <div>
+        <h2>⚖️ Case Analysis Report</h2>
+        <p>Ontario Parent Defense — AI Legal Analysis (Gemini)</p>
+        <div class="report-date" id="reportDate"></div>
+      </div>
+      <div style="text-align:right"><div style="font-size:26px">🏛️</div><div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">CONFIDENTIAL</div></div>
+    </div>
+    <div class="report-section" style="margin-bottom:22px"><div class="section-title">📋 Case Summary</div><div class="report-content" id="rSummary"></div></div>
+    <div class="report-section" style="margin-bottom:22px"><div class="section-title">🛡️ Charter Rights — Status Assessment</div><div id="rRights"></div></div>
+    <div class="report-section" style="margin-bottom:22px"><div class="section-title">📜 CYFSA Legal Grounds Being Used</div><div class="report-content" id="rGrounds"></div></div>
+    <div class="report-section" style="margin-bottom:22px"><div class="section-title">🎯 Defense Strategies — Ranked by Strength</div><div class="defense-list" id="rDefense"></div></div>
+    <div class="report-section" id="rEvidenceSection" style="margin-bottom:22px"><div class="section-title">📁 Evidence File Log</div><div id="rEvidence"></div></div>
+    <div class="report-section" style="margin-bottom:22px"><div class="section-title">✅ Recommended Next Steps</div><div class="steps-list" id="rSteps"></div></div>
+    <div class="report-section" style="margin-bottom:22px"><div class="section-title">💬 Talking Points for Your Lawyer</div><div class="report-content" id="rTalkingPoints"></div></div>
+    <div class="download-row">
+      <button class="btn btn-navy" onclick="downloadReport()">⬇️ Download Report (HTML)</button>
+      <button class="btn btn-gold" onclick="window.print()">🖨️ Print / Save as PDF</button>
+      <button class="btn btn-outline" onclick="copyReport()">📋 Copy to Clipboard</button>
+    </div>
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script>
+'use strict';
+OPD.init('analyzer');
+
+var uploadedFiles = [];
+var verifiedKey = '';
+
+function showError(msg){var b=document.getElementById('errorBox');document.getElementById('errorMsg').textContent=' '+msg;b.style.display='block';b.scrollIntoView({behavior:'smooth',block:'center'});}
+function hideError(){document.getElementById('errorBox').style.display='none';}
+function fmtBytes(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(1)+' MB';}
+function updateCount(){document.getElementById('charCount').textContent=document.getElementById('situationText').value.length.toLocaleString()+' characters';}
+function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
+
+async function testKey(){
+  var key=document.getElementById('apiKey').value.trim();
+  var st=document.getElementById('apiStatus');
+  var btn=document.getElementById('connectBtn');
+  hideError();
+  if(!key){showError('Please paste your Gemini API key first.');return;}
+  if(!key.startsWith('AIza')){showError('Gemini keys start with AIza — get yours free at aistudio.google.com/app/apikey');return;}
+  btn.disabled=true;btn.textContent='⏳ Checking...';
+  st.className='api-status checking';st.textContent='⏳ Verifying with Google...';
+  try{
+    var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?key='+key);
+    btn.disabled=false;btn.textContent='Connect →';
+    if(r.status===200){verifiedKey=key;st.className='api-status ok';st.textContent='✓ Connected! Google Gemini is ready to analyze your case for free.';}
+    else if(r.status===400||r.status===403){verifiedKey='';st.className='api-status err';st.textContent='✗ Invalid API key. Get your free key at aistudio.google.com/app/apikey';}
+    else{verifiedKey='';st.className='api-status err';st.textContent='✗ Error '+r.status+' — check your key and try again.';}
+  }catch(e){btn.disabled=false;btn.textContent='Connect →';verifiedKey='';st.className='api-status err';st.textContent='✗ Network error: '+e.message;}
+}
+
+function handleFiles(newFiles){
+  Array.from(newFiles).forEach(function(f){
+    if(uploadedFiles.length>=10){alert('Max 10 files.');return;}
+    if(f.size>20971520){alert(f.name+' too large (max 20MB).');return;}
+    var entry={file:f,name:f.name,type:f.type,base64:null,dataUrl:null,description:'',status:'loading'};
+    uploadedFiles.push(entry);renderFiles();readFile(entry);
+  });
+  document.getElementById('fileInput').value='';
+}
+function readFile(entry){
+  var reader=new FileReader();
+  reader.onload=function(e){entry.dataUrl=e.target.result;entry.base64=e.target.result.split(',')[1];entry.status='ok';renderFiles();};
+  reader.onerror=function(){entry.status='err';renderFiles();};
+  reader.readAsDataURL(entry.file);
+}
+function removeFile(i){uploadedFiles.splice(i,1);renderFiles();}
+function renderFiles(){
+  var list=document.getElementById('fileList');
+  if(!uploadedFiles.length){list.innerHTML='';return;}
+  list.innerHTML=uploadedFiles.map(function(f,i){
+    var isImg=f.type.startsWith('image/')||/\.(heic|heif|jpg|jpeg|png|gif|webp)$/i.test(f.name);
+    var isPdf=f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf');
+    var thumb=(isImg&&f.dataUrl)?'<img src="'+f.dataUrl+'" class="file-thumb" alt="">'
+      :'<div class="file-thumb-icon">'+(isPdf?'📄':'📎')+'</div>';
+    var statusEl=f.status==='loading'?'<div class="file-status loading">⏳ Reading...</div>'
+      :f.status==='ok'?'<div class="file-status ok">✓ Ready</div>'
+      :'<div class="file-status err">✗ Error reading file</div>';
+    return '<div class="file-item">'+thumb+'<div class="file-info"><div class="file-name">'+f.name+'</div>'
+      +'<div class="file-meta">'+fmtBytes(f.file.size)+' · '+(f.type||'unknown')+'</div>'
+      +'<input class="file-desc-input" type="text" placeholder="Describe this file" value="'+f.description.replace(/"/g,'&quot;')+'" oninput="uploadedFiles['+i+'].description=this.value">'
+      +statusEl+'</div><button class="file-remove" onclick="removeFile('+i+')" title="Remove">✕</button></div>';
+  }).join('');
+}
+var zone=document.getElementById('uploadZone');
+zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag');});
+zone.addEventListener('dragleave',function(){zone.classList.remove('drag');});
+zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('drag');handleFiles(e.dataTransfer.files);});
+
+function setPS(n,state){var el=document.getElementById('ps'+n);var ic=document.getElementById('pss'+n);if(!el)return;el.className='p-step'+(state==='done'?' done':state==='active'?' active':'');ic.textContent=state==='done'?'✅':'⏳';}
+async function animateSteps(){for(var i=1;i<=5;i++){setPS(i,'active');await delay(800);if(i<5)setPS(i,'done');}}
+
+async function runAnalysis(){
+  hideError();
+  var situation=document.getElementById('situationText').value.trim();
+  var key=verifiedKey||document.getElementById('apiKey').value.trim();
+  if(!key||!key.startsWith('AIza')){showError('Please connect your free Gemini API key above first.');return;}
+  if(!situation&&uploadedFiles.length===0){showError('Please describe your situation or upload at least one file.');return;}
+  if(uploadedFiles.filter(function(f){return f.status==='loading';}).length){showError('Files still loading — wait a moment.');return;}
+
+  var btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spinner">⏳</span>&nbsp; Analyzing — 20–40 seconds...';
+  document.getElementById('progressCard').classList.add('visible');
+  document.getElementById('reportCard').classList.remove('visible');
+  window.scrollTo({top:document.getElementById('progressCard').offsetTop-80,behavior:'smooth'});
+  animateSteps();
+
+  var systemPrompt='You are a specialized Ontario child protection legal analysis AI for Ontario Parent Defense.\n\n'
+    +'Analyze the parent\'s situation and uploaded evidence. Produce a complete structured JSON report.\n\n'
+    +'ONTARIO LAW BASIS: CYFSA 2017 (S.O. 2017 c.14), Canadian Charter of Rights and Freedoms, Ontario Human Rights Code.\n\n'
+    +'RULES:\n- Use plain language (grade 8 level)\n- Only reference facts provided\n- Always include Legal Aid Ontario 1-800-668-8258\n'
+    +'- Cite specific CYFSA sections (e.g. s.74(2)(b), s.84)\n- Educational information only, not legal advice\n\n'
+    +'Return ONLY a valid JSON object — no markdown, no extra text:\n\n'
+    +'{"summary":"2-3 paragraph plain language overview","rights":[{"section":"Section 7","title":"Life, Liberty & Security","status":"violated|at-risk|monitor|ok","explanation":"..."},{"section":"Section 8","title":"Search & Seizure","status":"violated|at-risk|monitor|ok","explanation":"..."},{"section":"Section 9","title":"Arbitrary Detention","status":"violated|at-risk|monitor|ok","explanation":"..."},{"section":"Section 10(b)","title":"Right to Counsel","status":"violated|at-risk|monitor|ok","explanation":"..."},{"section":"Section 15","title":"Equality Rights","status":"violated|at-risk|monitor|ok","explanation":"..."}],"grounds":"CYFSA s.74(2) subsections CAS relies on and whether legally supported","defense":[{"strength":"strong|medium|monitor","title":"...","detail":"..."}],"nextSteps":[{"urgency":"urgent|soon|when-able","action":"..."}],"talkingPoints":"Bullet points for lawyer with CYFSA references","overallAssessment":"1-2 sentences"}';
+
+  // Build Gemini parts array
+  var parts=[{text:'PARENT SITUATION:\n'+(situation||'(No description — analyze uploaded files only)')}];
+  var imgCount=0;
+  for(var fi=0;fi<uploadedFiles.length;fi++){
+    var f=uploadedFiles[fi];
+    if(f.status!=='ok'||!f.base64)continue;
+    var isImg=f.type.startsWith('image/')||/\.(heic|heif|jpg|jpeg|png|gif|webp)$/i.test(f.name);
+    var isPdf=f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf');
+    var label='\nFILE: "'+f.name+'"'+(f.description?' — "'+f.description+'"':'');
+    if(isImg&&imgCount<8){
+      var mime=f.type||'image/jpeg';
+      if(/heic|heif/i.test(mime)||mime==='')mime='image/jpeg';
+      if(!['image/jpeg','image/png','image/gif','image/webp'].includes(mime))mime='image/jpeg';
+      parts.push({text:label});
+      parts.push({inline_data:{mime_type:mime,data:f.base64}});
+      imgCount++;
+    }else if(isPdf){
+      parts.push({text:label+'\n(PDF document — analyze based on name and description)'});
+    }else{
+      try{var txt=new TextDecoder('utf-8',{fatal:false}).decode(Uint8Array.from(atob(f.base64),function(c){return c.charCodeAt(0);}));parts.push({text:label+'\nCONTENT:\n'+txt.substring(0,6000)});}
+      catch(e){parts.push({text:label});}
+    }
+  }
+  parts.push({text:'\nReturn ONLY the JSON object as specified. No markdown fences. No extra text.'});
+
+  try{
+    var resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+key,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        system_instruction:{parts:[{text:systemPrompt}]},
+        contents:[{role:'user',parts:parts}],
+        generationConfig:{temperature:0.2,maxOutputTokens:4096,responseMimeType:'application/json'}
+      })
+    });
+    if(!resp.ok){
+      var errBody={};try{errBody=await resp.json();}catch(e){}
+      var errMsg=(errBody.error&&errBody.error.message)?errBody.error.message:'Gemini API error '+resp.status;
+      if(resp.status===400)errMsg='Invalid API key or bad request — get your free key at aistudio.google.com/app/apikey';
+      if(resp.status===429)errMsg='Rate limit reached — free tier allows 1,500/day. Try again shortly.';
+      throw new Error(errMsg);
+    }
+    var data=await resp.json();
+    var rawText='';
+    if(data.candidates&&data.candidates[0]&&data.candidates[0].content&&data.candidates[0].content.parts){
+      rawText=data.candidates[0].content.parts.map(function(p){return p.text||'';}).join('');
+    }
+    if(!rawText)throw new Error('Gemini returned an empty response. Please try again.');
+    var result;
+    try{result=JSON.parse(rawText);}
+    catch(e){var s=rawText.indexOf('{');var en=rawText.lastIndexOf('}');if(s===-1||en===-1)throw new Error('Could not parse AI response. Please try again.');result=JSON.parse(rawText.slice(s,en+1));}
+    setPS(5,'done');await delay(300);renderReport(result);
+  }catch(err){
+    document.getElementById('progressCard').classList.remove('visible');
+    btn.disabled=false;btn.innerHTML='<span style="font-size:22px">⚖️</span> Analyze My Case Free — Generate Lawyer Report';
+    showError(err.message);
+  }
+}
+
+function renderReport(r){
+  document.getElementById('reportDate').textContent='Generated: '+new Date().toLocaleString('en-CA',{dateStyle:'full',timeStyle:'short'});
+  document.getElementById('rSummary').textContent=r.summary||'No summary.';
+  var rights=r.rights||[];
+  document.getElementById('rRights').innerHTML='<div class="rights-grid">'+rights.map(function(rt){
+    var cls=rt.status==='violated'?'':rt.status==='at-risk'?'moderate':rt.status==='ok'?'ok':'monitor';
+    var icon=rt.status==='violated'?'🔴':rt.status==='at-risk'?'🟡':rt.status==='ok'?'🟢':'🔵';
+    return '<div class="right-pill '+cls+'"><div class="right-pill-title">'+icon+' '+(rt.section||'')+' — '+(rt.title||'')+'</div><div class="right-pill-desc">'+(rt.explanation||'')+'</div></div>';
+  }).join('')+'</div>';
+  document.getElementById('rGrounds').textContent=r.grounds||'';
+  var defense=r.defense||[];
+  document.getElementById('rDefense').innerHTML=defense.map(function(d,i){
+    var s=d.strength||'';var label=s==='strong'?'💪 STRONG':s==='medium'?'⚡ MEDIUM':'👁️ MONITOR';
+    return '<div class="defense-item '+s+'"><div class="defense-rank '+s+'">'+label+' ARGUMENT · #'+(i+1)+'</div><div class="defense-text"><strong>'+(d.title||'')+'</strong><br>'+(d.detail||'')+'</div></div>';
+  }).join('');
+  if(uploadedFiles.length>0){
+    document.getElementById('rEvidence').innerHTML='<table class="evidence-table"><thead><tr><th>#</th><th>File Name</th><th>Type</th><th>Size</th><th>Description</th></tr></thead><tbody>'+uploadedFiles.map(function(f,i){
+      return '<tr><td>'+(i+1)+'</td><td>'+f.name+'</td><td>'+(f.type||'Unknown')+'</td><td>'+fmtBytes(f.file.size)+'</td><td>'+(f.description||'<em style="color:#aab">None</em>')+'</td></tr>';
+    }).join('')+'</tbody></table>';
+  }else{document.getElementById('rEvidenceSection').style.display='none';}
+  var steps=r.nextSteps||[];
+  document.getElementById('rSteps').innerHTML=steps.map(function(s,i){
+    var u=s.urgency||'when-able';var label=u==='urgent'?'🚨 URGENT':u==='soon'?'⏰ SOON':'📅 WHEN ABLE';
+    return '<div class="next-step"><div class="next-step-num">'+(i+1)+'</div><div class="next-step-text">'+(s.action||s)+' <span class="urgency-tag '+u+'">'+label+'</span></div></div>';
+  }).join('');
+  document.getElementById('rTalkingPoints').textContent=r.talkingPoints||'';
+  document.getElementById('progressCard').classList.remove('visible');
+  document.getElementById('reportCard').classList.add('visible');
+  var btn=document.getElementById('analyzeBtn');
+  btn.disabled=false;btn.innerHTML='<span style="font-size:22px">🔄</span> Re-Analyze / Update Report';
+  ['step1','step2','step3'].forEach(function(s){document.getElementById(s).className='step done';});
+  document.getElementById('step4').className='step active';
+  window.scrollTo({top:document.getElementById('reportCard').offsetTop-80,behavior:'smooth'});
+}
+
+function downloadReport(){
+  var html=document.getElementById('reportCard').outerHTML;
+  var full='<!DOCTYPE html><html><head><meta charset="utf-8"><title>CAS Case Report</title><style>body{font-family:sans-serif;max-width:860px;margin:40px auto;padding:20px;color:#1a2740;background:#fff}.report-card{display:block!important}.download-row{display:none}.report-header{background:linear-gradient(135deg,#0b1e3f,#163469);color:#fff;border-radius:10px;padding:22px 26px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center}.report-header h2{font-size:22px;margin:0}.report-section{margin-bottom:22px}.section-title{font-size:17px;font-weight:700;color:#0b1e3f;margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid #dde5f0}.report-content{font-size:15px;line-height:1.75;white-space:pre-wrap}.rights-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.right-pill{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:10px 13px;font-size:13px;color:#7f1d1d}.right-pill.moderate{background:#fffbeb;border-color:#fcd34d;color:#92400e}.right-pill.monitor{background:#eff6ff;border-color:#93c5fd;color:#1e3a8a}.right-pill.ok{background:#ecfdf5;border-color:#86efac;color:#065f46}.right-pill-title{font-weight:700;margin-bottom:3px}.defense-list{display:flex;flex-direction:column;gap:9px}.defense-item{background:#faf8f4;border:1px solid #dde5f0;border-left:4px solid #163469;border-radius:0 8px 8px 0;padding:13px 15px}.defense-item.strong{border-left-color:#065f46}.defense-item.medium{border-left-color:#b07d2a}.defense-rank{font-size:11px;text-transform:uppercase;font-weight:700;color:#5e718a;margin-bottom:4px}.defense-text{font-size:14px;line-height:1.65}.steps-list{display:flex;flex-direction:column;gap:9px}.next-step{display:flex;gap:12px;background:#faf8f4;border:1px solid #dde5f0;border-radius:8px;padding:13px 15px}.next-step-num{width:26px;height:26px;border-radius:50%;background:#0b1e3f;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px}.urgency-tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:5px}.urgency-tag.urgent{background:#fef2f2;color:#b91c1c}.urgency-tag.soon{background:#fffbeb;color:#92400e}.urgency-tag.when-able{background:#eff6ff;color:#1e3a8a}.evidence-table{width:100%;border-collapse:collapse;font-size:13px}.evidence-table th{background:#0b1e3f;color:#fff;padding:9px 11px;text-align:left}.evidence-table td{padding:9px 11px;border-bottom:1px solid #dde5f0}</style></head><body>'+html+'</body></html>';
+  var blob=new Blob([full],{type:'text/html'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='CAS-Report-'+new Date().toISOString().slice(0,10)+'.html';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+function copyReport(){
+  var text=document.getElementById('reportCard').innerText;
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(function(){alert('Copied!');}).catch(fb);}else{fb();}
+  function fb(){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('Copied!');}
+}
+</script>
+</body>
+</html>

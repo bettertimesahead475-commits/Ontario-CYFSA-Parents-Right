@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Find a Lawyer — Ontario Parent Defense</title>
+  <meta name="description" content="Find free and affordable child protection lawyers in Ontario. Legal Aid Ontario, duty counsel, lawyer referral services, and what questions to ask.">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .resource-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; box-shadow: var(--sh); }
+    .resource-card-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; gap: 12px; }
+    .resource-icon { font-size: 28px; flex-shrink: 0; }
+    .resource-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+    .resource-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 2px 7px; border-radius: 4px; }
+    .tag-free { background: var(--success-bg); color: var(--success); }
+    .tag-paid { background: var(--warn-bg); color: var(--warn); }
+    .tag-urgent { background: var(--danger-bg); color: var(--danger); }
+    .resource-body { padding: 16px 22px; }
+    .resource-body p { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 10px; }
+    .resource-phone { display: flex; align-items: center; gap: 8px; background: var(--cream); border-radius: 8px; padding: 10px 14px; margin-top: 10px; text-decoration: none; transition: all .15s; }
+    .resource-phone:hover { background: var(--navy); color: #fff; }
+    .resource-phone:hover .ph-num { color: #fff; }
+    .resource-phone:hover .ph-label { color: rgba(255,255,255,.7); }
+    .ph-icon { font-size: 18px; flex-shrink: 0; }
+    .ph-num { font-size: 17px; font-weight: 700; color: var(--navy); font-family: 'Cormorant Garamond', serif; }
+    .ph-label { font-size: 11px; color: var(--muted); }
+    .resource-link { display: inline-flex; align-items: center; gap: 6px; color: var(--navy-mid); font-weight: 600; font-size: 14px; text-decoration: none; margin-top: 8px; }
+    .resource-link:hover { text-decoration: underline; }
+    .questions-list { display: flex; flex-direction: column; gap: 10px; }
+    .q-item { background: var(--cream); border-radius: 8px; padding: 14px 16px; border-left: 3px solid var(--gold); }
+    .q-num { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
+    .q-text { font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+    .q-why { font-size: 13px; color: var(--muted); line-height: 1.55; }
+    .red-flags { display: flex; flex-direction: column; gap: 8px; }
+    .red-flag { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: #7f1d1d; line-height: 1.6; background: var(--danger-bg); border-radius: 8px; padding: 12px 14px; }
+    .green-flags { display: flex; flex-direction: column; gap: 8px; }
+    .green-flag { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--success); line-height: 1.6; background: var(--success-bg); border-radius: 8px; padding: 12px 14px; }
+    .duty-counsel-box { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); color: #fff; border-radius: var(--radius); padding: 24px 28px; }
+    .duty-counsel-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .duty-counsel-box p { font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.7; margin-bottom: 10px; }
+    .duty-counsel-box a { color: var(--gold-bright); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-stamp">👨‍⚖️ Free & Affordable Legal Help · Ontario</div>
+    <h1>Find a <em>Lawyer</em></h1>
+    <p>Free legal help is available right now. Legal Aid Ontario provides free lawyers to qualifying families. You do not have to face CAS alone.</p>
+  </div>
+</div>
+<div class="gold-rule"></div>
+
+<main class="page-main">
+
+  <!-- DUTY COUNSEL BOX -->
+  <div class="duty-counsel-box" style="margin-bottom:28px">
+    <h3>🆘 Need a Lawyer Right Now? — Duty Counsel</h3>
+    <p>If you have court today or tomorrow and no lawyer, <strong>duty counsel</strong> is a free lawyer available at every Ontario courthouse on every court day. Walk in and say: <strong>"I need duty counsel for a child protection matter."</strong></p>
+    <p>Duty counsel can give you advice, speak in court for you on short matters, and help you understand your options — all for free.</p>
+    <a href="tel:18006688258" style="display:inline-flex;align-items:center;gap:8px;background:var(--gold-bright);color:var(--navy);padding:12px 22px;border-radius:9px;font-weight:700;font-size:15px;text-decoration:none;margin-top:4px">📞 Call Legal Aid Now: 1-800-668-8258</a>
+  </div>
+
+  <!-- RESOURCE CARDS -->
+  <div class="card-title" style="margin-bottom:16px">📋 Legal Help Resources — Ontario</div>
+  <div class="resource-grid" style="margin-bottom:32px">
+
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-icon">🆘</div>
+        <div>
+          <div class="resource-name">Legal Aid Ontario</div>
+          <span class="resource-tag tag-free">Free</span>
+          <span class="resource-tag tag-urgent" style="margin-left:4px">Most Important</span>
+        </div>
+      </div>
+      <div class="resource-body">
+        <p>Legal Aid Ontario provides <strong>free legal representation</strong> to qualifying families in child protection cases. Income-based qualification. Apply immediately — especially if your child has been removed.</p>
+        <p>Child protection cases are usually <strong>automatically eligible</strong> — do not assume you won't qualify.</p>
+        <a href="tel:18006688258" class="resource-phone">
+          <span class="ph-icon">📞</span>
+          <div><div class="ph-num">1-800-668-8258</div><div class="ph-label">Free · 24/7 · Legal Aid Ontario</div></div>
+        </a>
+        <a href="https://www.legalaid.on.ca" target="_blank" class="resource-link">🌐 legalaid.on.ca →</a>
+      </div>
+    </div>
+
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-icon">⚖️</div>
+        <div>
+          <div class="resource-name">Lawyer Referral Service</div>
+          <span class="resource-tag tag-free">Free Consultation</span>
+        </div>
+      </div>
+      <div class="resource-body">
+        <p>The Law Society of Ontario's Lawyer Referral Service connects you with a lawyer for a <strong>free 30-minute consultation</strong>. A great starting point to understand your options before committing to a lawyer.</p>
+        <p>Available by phone Monday to Friday, 9am–5pm.</p>
+        <a href="tel:18559475255" class="resource-phone">
+          <span class="ph-icon">📞</span>
+          <div><div class="ph-num">1-855-947-5255</div><div class="ph-label">Free 30-min consult · Law Society of Ontario</div></div>
+        </a>
+        <a href="https://lso.ca/public-resources/finding-a-lawyer-or-paralegal/law-society-referral-service" target="_blank" class="resource-link">🌐 lso.ca/referral →</a>
+      </div>
+    </div>
+
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-icon">🏛️</div>
+        <div>
+          <div class="resource-name">Legal Clinics — Ontario</div>
+          <span class="resource-tag tag-free">Free · Income-Based</span>
+        </div>
+      </div>
+      <div class="resource-body">
+        <p>Community legal clinics across Ontario provide free legal advice to low-income individuals. Many handle child protection matters. Find your local clinic through Legal Aid Ontario.</p>
+        <p>Clinic lawyers know local CAS offices and local courts — a major advantage.</p>
+        <a href="https://www.legalaid.on.ca/legal-clinics/" target="_blank" class="resource-link">🌐 Find Your Local Clinic →</a>
+        <a href="tel:18006688258" class="resource-phone" style="margin-top:8px">
+          <span class="ph-icon">📞</span>
+          <div><div class="ph-num">1-800-668-8258</div><div class="ph-label">Ask for clinic referral</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-icon">🤝</div>
+        <div>
+          <div class="resource-name">Pro Bono Ontario</div>
+          <span class="resource-tag tag-free">Free · Limited</span>
+        </div>
+      </div>
+      <div class="resource-body">
+        <p>Pro Bono Ontario connects low-income Ontarians with volunteer lawyers for free legal help. They run courthouse clinics at many Ontario family court locations.</p>
+        <p>Walk-in courthouse clinics available on many family court days — no appointment needed.</p>
+        <a href="https://www.probonoontario.org" target="_blank" class="resource-link">🌐 probonoontario.org →</a>
+        <a href="tel:18552559461" class="resource-phone" style="margin-top:8px">
+          <span class="ph-icon">📞</span>
+          <div><div class="ph-num">1-855-255-9461</div><div class="ph-label">Pro Bono Ontario Help Line</div></div>
+        </a>
+      </div>
+    </div>
+
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-icon">🧑‍🤝‍🧑</div>
+        <div>
+          <div class="resource-name">Indigenous Legal Help</div>
+          <span class="resource-tag tag-free">Free · Indigenous</span>
+        </div>
+      </div>
+      <div class="resource-body">
+        <p>Anishinaabe Family Services, Native Child and Family Services, and other Indigenous-specific organizations offer legal support and advocacy for Indigenous families in child protection.</p>
+        <p>CYFSA Part X gives Indigenous communities special rights in child protection cases. You may be entitled to have your band or nation involved in your case.</p>
+        <a href="https://www.nativechild.org" target="_blank" class="resource-link">🌐 Native Child & Family →</a>
+        <a href="https://kina.on.ca" target="_blank" class="resource-link">🌐 Kina Gbezhigomi →</a>
+      </div>
+    </div>
+
+    <div class="resource-card">
+      <div class="resource-card-header">
+        <div class="resource-icon">🔍</div>
+        <div>
+          <div class="resource-name">Private Child Protection Lawyers</div>
+          <span class="resource-tag tag-paid">Paid · If Eligible</span>
+        </div>
+      </div>
+      <div class="resource-body">
+        <p>If you do not qualify for Legal Aid, a private child protection lawyer is strongly recommended. Child protection law is specialized — look for experience specifically in CYFSA matters.</p>
+        <p>Many offer free initial consultations. Hourly rates range from $200–$400/hr in Ontario.</p>
+        <a href="https://lso.ca/public-resources/finding-a-lawyer-or-paralegal/lawyer-and-paralegal-directory" target="_blank" class="resource-link">🌐 Find a Lawyer — LSO Directory →</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- WHAT TO ASK -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-title">❓ 10 Questions to Ask Every Lawyer</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:18px">Ask these questions in your first consultation — before you hire anyone.</p>
+    <div class="questions-list">
+      <div class="q-item">
+        <div class="q-num">Question 1</div>
+        <div class="q-text">"How many child protection cases have you handled under the CYFSA?"</div>
+        <div class="q-why">Child protection law is specialized. You want someone with CYFSA experience specifically, not just general family law.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 2</div>
+        <div class="q-text">"Have you appeared at [your local courthouse]? Do you know the judges and CAS workers there?"</div>
+        <div class="q-why">Local knowledge is a significant advantage. Lawyers who know the local court culture can navigate more effectively.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 3</div>
+        <div class="q-text">"What is your honest assessment of my case after reviewing these facts?"</div>
+        <div class="q-why">A good lawyer gives you an honest assessment, not just what you want to hear. Beware of anyone who guarantees outcomes.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 4</div>
+        <div class="q-text">"What is the least restrictive outcome we can realistically fight for?"</div>
+        <div class="q-why">Under CYFSA s.1, courts prefer the least restrictive option. A good lawyer should be targeting supervision, not just fighting wardship.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 5</div>
+        <div class="q-text">"Who will actually handle my case day-to-day — you or a junior lawyer?"</div>
+        <div class="q-why">At some firms, senior lawyers sign up clients but juniors do the work. Know who you're actually getting.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 6</div>
+        <div class="q-text">"How do you communicate with clients? How quickly will you return my calls and emails?"</div>
+        <div class="q-why">Communication is critical in CAS cases. You need a lawyer who is responsive, especially around court dates and CAS visits.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 7</div>
+        <div class="q-text">"What is your retainer and estimated total cost?"</div>
+        <div class="q-why">Get cost estimates in writing. Child protection cases can run months or years — understand the financial commitment.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 8</div>
+        <div class="q-text">"Will you attend every court appearance or send duty counsel?"</div>
+        <div class="q-why">Your lawyer should appear at all significant hearings personally, not just send a substitute at the last minute.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 9</div>
+        <div class="q-text">"Have you ever identified a Charter rights violation in a CAS case? What happened?"</div>
+        <div class="q-why">This tells you if the lawyer thinks beyond standard procedure and understands constitutional arguments — often the strongest defense.</div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">Question 10</div>
+        <div class="q-text">"What should I do and not do between now and my next court date?"</div>
+        <div class="q-why">A good lawyer gives you specific, practical guidance — not just general advice. Listen carefully and follow it exactly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RED FLAGS / GREEN FLAGS -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:24px">
+    <div class="card">
+      <div class="card-title" style="color:var(--danger)">🚩 Red Flags — Walk Away</div>
+      <div class="red-flags">
+        <div class="red-flag">❌ Guarantees a specific outcome ("I'll definitely get your child back")</div>
+        <div class="red-flag">❌ Pressures you to sign immediately without time to think</div>
+        <div class="red-flag">❌ Cannot explain the CYFSA grounds CAS is using</div>
+        <div class="red-flag">❌ Advises you to cooperate fully with CAS before consulting a lawyer</div>
+        <div class="red-flag">❌ Never returns calls or emails promptly</div>
+        <div class="red-flag">❌ Tells you to plead or consent without explaining the consequences</div>
+        <div class="red-flag">❌ Has no experience with child protection specifically</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--success)">✅ Green Flags — Good Signs</div>
+      <div class="green-flags">
+        <div class="green-flag">✅ Asks detailed questions about your specific situation before advising</div>
+        <div class="green-flag">✅ Gives you an honest assessment — including weaknesses in your case</div>
+        <div class="green-flag">✅ Knows specific CYFSA sections and can cite them by number</div>
+        <div class="green-flag">✅ Discusses Charter rights and whether any violations occurred</div>
+        <div class="green-flag">✅ Explains the full range of outcomes — from dismissal to wardship</div>
+        <div class="green-flag">✅ Returns calls within 24 hours and is accessible in emergencies</div>
+        <div class="green-flag">✅ Has appeared in child protection cases at your local courthouse</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REPRESENT YOURSELF -->
+  <div class="card">
+    <div class="card-title">📖 If You Cannot Get a Lawyer — Self-Representation</div>
+    <p style="font-size:15px;line-height:1.75;margin-bottom:14px">Representing yourself in a child protection case is very difficult but not impossible. Here are the resources available to self-represented parties in Ontario Family Court:</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+      <div style="background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:16px">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:6px">Family Law Information Centres (FLIC)</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.55">Available at every Ontario family courthouse. Staff help you understand forms and process — free.</div>
+      </div>
+      <div style="background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:16px">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:6px">Law Society Lookup</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.55">Verify any lawyer's credentials and standing at <a href="https://lso.ca" target="_blank" style="color:var(--navy-mid);font-weight:600">lso.ca</a></div>
+      </div>
+      <div style="background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:16px">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:6px">Ontario Court Forms</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.55">All child protection forms at <a href="https://ontariocourtforms.on.ca" target="_blank" style="color:var(--navy-mid);font-weight:600">ontariocourtforms.on.ca</a></div>
+      </div>
+      <div style="background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:16px">
+        <div style="font-weight:700;color:var(--navy);margin-bottom:6px">Family Rules</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.55">Ontario Family Law Rules govern all court procedures — available free at e-Laws Ontario</div>
+      </div>
+    </div>
+    <div class="alert alert-warn" style="margin-top:16px">
+      <strong>⚠️ Strong Recommendation:</strong> Even if you ultimately represent yourself, get at least one consultation with a lawyer or duty counsel first. Understanding the process and your rights — even from one meeting — can make a significant difference.
+    </div>
+  </div>
+
+  <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+    <a href="analyzer.html" class="btn btn-gold btn-lg">⚖️ Analyze My Case with AI →</a>
+    <a href="evidence.html" class="btn btn-navy">📁 Build My Evidence File</a>
+    <a href="emergency.html" class="btn btn-outline">🚨 Emergency Protocol</a>
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script>OPD.init('lawyer');</script>
+</body>
+</html>
