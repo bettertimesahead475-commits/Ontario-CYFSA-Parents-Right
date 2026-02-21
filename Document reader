@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ontario Case Scanner</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f4f7f6; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        #upload-zone { border: 2px dashed #007bff; padding: 40px; text-align: center; border-radius: 12px; background: #f0f7ff; cursor: pointer; margin-bottom: 20px; }
+        #actionBtn { background: #007bff; color: white; border: none; padding: 15px; border-radius: 8px; width: 100%; font-size: 18px; font-weight: bold; cursor: pointer; }
+        #actionBtn:disabled { background: #ccc; }
+        .blurred-text { filter: blur(8px); user-select: none; pointer-events: none; background: white; padding: 20px; border-radius: 8px; border: 1px solid #eee; height: 250px; overflow: hidden; }
+        #results-wrapper { display: none; margin-top: 30px; position: relative; }
+        .paywall-box { background: #fff; border: 2px solid #007bff; padding: 25px; border-radius: 12px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: absolute; top: 10%; left: 10%; right: 10%; z-index: 10; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Legal Document Scanner</h2>
+    <p>Upload any CAS document. We'll find the Case # and key facts automatically.</p>
+
+    <div id="upload-zone" onclick="document.getElementById('fileInput').click()">
+        <p>📁 <strong>Click to Upload Document</strong></p>
+        <p id="fileNameDisplay"><small>(Text files only for now)</small></p>
+        <input type="file" id="fileInput" style="display:none" onchange="handleFile(this)">
+    </div>
+
+    <button id="actionBtn" onclick="runAnalysis()" disabled>Waiting for file...</button>
+
+    <div id="results-wrapper">
+        <div id="resultsText" class="blurred-text"></div>
+        <div class="paywall-box">
+            <h3>📊 Analysis Complete</h3>
+            <p>We've extracted the Case # and Allegations.</p>
+            <div style="background: #f8f9fa; border: 1px dashed #007bff; padding: 10px; margin: 15px 0;">
+                <strong>e-Transfer $30 to:</strong><br>
+                mr.pelkie@gmail.com
+            </div>
+            <button onclick="window.location.href='mailto:mr.pelkie@gmail.com?subject=Unlock Analysis'" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">I've Sent Payment</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let extractedText = "";
+
+    // THIS READS THE FILE FROM THE USER'S COMPUTER
+    function handleFile(input) {
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            extractedText = e.target.result; 
+            document.getElementById('fileNameDisplay').innerHTML = "<strong>✅ " + file.name + " loaded.</strong>";
+            document.getElementById('actionBtn').disabled = false;
+            document.getElementById('actionBtn').innerText = "Analyze " + file.name;
+        };
+        reader.readAsText(file);
+    }
+
+    // THIS SENDS THE DATA TO THE "BRAIN" (Netlify Function)
+    async function runAnalysis() {
+        const btn = document.getElementById('actionBtn');
+        btn.disabled = true;
+        btn.innerText = "🕵️ Scanning...";
+
+        try {
+            const response = await fetch('/.netlify/functions/analyze', {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    prompt: "Extract the Case Number, Document Type, and all specific allegations from this text. Format it like a legal brief: " + extractedText 
+                })
+            });
+
+            const data = await response.json();
+            document.getElementById('resultsText').innerText = data.candidates[0].content.parts[0].text;
+            document.getElementById('results-wrapper').style.display = 'block';
+            btn.innerText = "Analysis Ready";
+        } catch (err) {
+            alert("Error: Make sure analyze.js is in netlify/functions/");
+            btn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
