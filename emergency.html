@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Emergency Removal Protocol — Ontario Parent Defense</title>
+  <meta name="description" content="Child removed by CAS? Hour-by-hour action plan for the critical 5-day window. What to do, who to call, what to say.">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .emergency-hero{background:linear-gradient(135deg,#7f1d1d,#b91c1c);color:#fff;padding:52px 24px 48px;text-align:center;position:relative;overflow:hidden}
+    .emergency-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,50px);font-weight:800;line-height:1.1;margin-bottom:14px}
+    .emergency-hero p{font-size:16px;color:rgba(255,255,255,.8);max-width:560px;margin:0 auto}
+    .call-box{background:var(--white);border:3px solid var(--danger);border-radius:var(--radius);padding:24px 28px;text-align:center;margin-bottom:24px;box-shadow:0 0 0 4px rgba(185,28,28,.1)}
+    .call-box h3{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--navy);margin-bottom:8px}
+    .call-num{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:800;color:var(--danger);display:block;margin:6px 0;text-decoration:none}
+    .call-num:hover{color:#7f1d1d}
+    .call-sub{font-size:13px;color:var(--muted)}
+    .timeline{display:flex;flex-direction:column;gap:0}
+    .tl-item{display:flex;align-items:flex-start;gap:0}
+    .tl-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:80px}
+    .tl-time{background:var(--danger);color:#fff;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;text-align:center;white-space:nowrap;z-index:1}
+    .tl-line{width:2px;background:var(--line);flex:1;min-height:20px}
+    .tl-body{flex:1;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:12px;margin-left:12px;box-shadow:var(--sh)}
+    .tl-body h4{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--navy);margin-bottom:8px}
+    .tl-body ul{margin:8px 0 8px 18px}
+    .tl-body li{font-size:14px;color:var(--text);margin-bottom:5px;line-height:1.6}
+    .tl-body .tl-urgent{background:var(--danger-bg);border:1px solid #fca5a5;border-radius:7px;padding:10px 13px;font-size:13px;color:#7f1d1d;margin-top:10px}
+    .tl-body .tl-tip{background:var(--success-bg);border:1px solid #86efac;border-radius:7px;padding:10px 13px;font-size:13px;color:var(--success);margin-top:10px}
+    .tl-body .tl-warn{background:var(--warn-bg);border:1px solid #fcd34d;border-radius:7px;padding:10px 13px;font-size:13px;color:var(--warn);margin-top:10px}
+    .tl-item:last-child .tl-line{display:none}
+    .rights-at-removal{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .right-at-removal{background:var(--navy);color:#fff;border-radius:10px;padding:16px}
+    .right-at-removal h5{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--gold-bright)}
+    .right-at-removal p{font-size:13px;color:rgba(255,255,255,.75);line-height:1.55}
+    .dont-do{background:var(--danger-bg);border:1px solid #fca5a5;border-radius:var(--radius);padding:22px}
+    .dont-do h3{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--danger);margin-bottom:14px}
+    .dont-list{display:flex;flex-direction:column;gap:8px}
+    .dont-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:#7f1d1d;line-height:1.6}
+    .dont-item::before{content:'❌';flex-shrink:0;margin-top:1px}
+  </style>
+</head>
+<body>
+
+<div class="emergency-hero">
+  <div style="max-width:700px;margin:0 auto;position:relative">
+    <div style="display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:18px">🚨 Child Removed — Act Immediately</div>
+    <h1>Emergency <em style="color:#fca5a5">Removal Protocol</em></h1>
+    <p>Your child was removed. You have 5 days before a court hearing. Follow this hour-by-hour plan. Do not wait. Do not guess. Do exactly this.</p>
+  </div>
+</div>
+<div style="height:3px;background:linear-gradient(90deg,#7f1d1d,var(--danger),#fca5a5,var(--danger),#7f1d1d)"></div>
+
+<main class="page-main">
+
+  <!-- EMERGENCY CALL BOXES -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:28px">
+    <div class="call-box">
+      <h3>🆘 Legal Aid Ontario</h3>
+      <a class="call-num" href="tel:18006688258">1-800-668-8258</a>
+      <div class="call-sub">Free · 24 hours · 7 days · Call THIS first</div>
+    </div>
+    <div class="call-box">
+      <h3>👨‍⚖️ Lawyer Referral Service</h3>
+      <a class="call-num" href="tel:18559475255">1-855-947-5255</a>
+      <div class="call-sub">Free 30-minute consultation</div>
+    </div>
+    <div class="call-box">
+      <h3>⚖️ AI Case Analyzer</h3>
+      <a class="call-num" href="analyzer.html" style="font-size:22px">Start Free →</a>
+      <div class="call-sub">Upload your documents, get a lawyer report</div>
+    </div>
+  </div>
+
+  <!-- RIGHTS AT REMOVAL -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-title">🛡️ Your Rights at the Moment of Removal</div>
+    <div class="rights-at-removal">
+      <div class="right-at-removal">
+        <h5>Right to Know Why</h5>
+        <p>CAS must tell you exactly why your child is being removed and under which CYFSA section. Ask: "Which section 74(2) subsection applies?"</p>
+      </div>
+      <div class="right-at-removal">
+        <h5>Right to Know Where</h5>
+        <p>CAS must tell you where your child is being placed immediately. Demand the address and contact information of the foster home or placement.</p>
+      </div>
+      <div class="right-at-removal">
+        <h5>Right to a Lawyer</h5>
+        <p>You have the right to speak with a lawyer before any interviews. Say: "I want to speak with a lawyer. I am calling Legal Aid now: 1-800-668-8258"</p>
+      </div>
+      <div class="right-at-removal">
+        <h5>Right to a Hearing</h5>
+        <p>Under CYFSA s.84(5), CAS must bring your child before the court within 5 days. You have the right to be present and represented.</p>
+      </div>
+      <div class="right-at-removal">
+        <h5>Right to Access</h5>
+        <p>Unless the court orders otherwise, you generally have the right to see and speak with your child. Ask CAS immediately about an access schedule.</p>
+      </div>
+      <div class="right-at-removal">
+        <h5>Right to Kinship</h5>
+        <p>Ask CAS to consider placing your child with a family member (grandparent, aunt/uncle, family friend) instead of a stranger foster home.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-title">⏰ Hour-By-Hour Action Plan — 5-Day Window</div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time">Hour 1</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>🚨 Call Legal Aid Ontario — RIGHT NOW</h4>
+        <ul>
+          <li>Call <strong>1-800-668-8258</strong> immediately — free, 24/7</li>
+          <li>Tell them your child was just removed by CAS</li>
+          <li>Request duty counsel immediately</li>
+          <li>Ask for an emergency certificate of legal aid</li>
+          <li>Do NOT answer CAS questions before speaking to a lawyer</li>
+        </ul>
+        <div class="tl-urgent">🔴 Do not sign any CAS documents until your lawyer has reviewed them. "I need to speak with my lawyer first" is all you need to say.</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time">Hour 2–3</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>📝 Document Everything — While It's Fresh</h4>
+        <ul>
+          <li>Write down the exact time and date of removal</li>
+          <li>Write the names of every CAS worker present</li>
+          <li>Write word-for-word what CAS said to you</li>
+          <li>Photograph any CAS letters, forms, or documents they left</li>
+          <li>Write down exactly what reason CAS gave for removal</li>
+          <li>Note any witnesses who were present</li>
+        </ul>
+        <div class="tl-tip">✅ Start a dated log book right now. Every contact with CAS must be recorded: date, time, who, what was said. This is your evidence.</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time">Hour 4–6</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>🤝 Call Your Support Network</h4>
+        <ul>
+          <li>Contact family members who could serve as kinship placement</li>
+          <li>Ask grandparents, aunts, uncles, or close family friends if they will volunteer</li>
+          <li>Tell CAS immediately if you have a kinship option — this can prevent strangers caring for your child</li>
+          <li>Notify your child's school, doctor, and therapist</li>
+        </ul>
+        <div class="tl-tip">✅ Kinship placement is preferred under CYFSA. Your family member can call CAS directly to volunteer and will be assessed.</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time">Day 2</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>📁 Gather Your Evidence</h4>
+        <ul>
+          <li>Collect all CAS letters, emails, and documents you have received</li>
+          <li>Gather proof of your positive parenting: school records, doctor visit records, photos</li>
+          <li>Collect character references from teachers, doctors, community members</li>
+          <li>Screenshot any relevant text messages or emails</li>
+          <li>Use the <a href="evidence.html">Evidence File Builder →</a> to organize everything</li>
+          <li>Use the <a href="analyzer.html">AI Case Analyzer →</a> to get a full legal analysis</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time">Day 3</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>👨‍⚖️ Confirm Your Lawyer and Prepare for Court</h4>
+        <ul>
+          <li>Confirm your Legal Aid lawyer is retained and has your file</li>
+          <li>Review all court documents with your lawyer</li>
+          <li>Provide your lawyer with all evidence you've gathered</li>
+          <li>Discuss asking for an immediate return of your child at the hearing</li>
+          <li>Ask your lawyer about arguing for supervision instead of wardship</li>
+        </ul>
+        <div class="tl-warn">⚠️ If you do not have a lawyer by Day 3, contact duty counsel at the courthouse directly. You can also represent yourself — but a lawyer is strongly recommended.</div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time">Day 4</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>📋 Final Court Preparation</h4>
+        <ul>
+          <li>Review what you will say with your lawyer</li>
+          <li>Dress professionally for court</li>
+          <li>Prepare a list of support people who will attend court with you</li>
+          <li>Gather any additional character references or letters of support</li>
+          <li>Know the courthouse location, room number, and time</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-time" style="background:#059669">Day 5</div><div class="tl-line"></div></div>
+      <div class="tl-body">
+        <h4>🏛️ Temporary Care and Custody Hearing (CYFSA s.84)</h4>
+        <ul>
+          <li>CAS must bring your child before the court today — this is your first hearing</li>
+          <li>The court will decide temporary custody arrangements</li>
+          <li>Your lawyer can ask for immediate return of your child</li>
+          <li>If return is not granted, ask for maximum access rights</li>
+          <li>Push for placement with a family member if not already arranged</li>
+          <li>Ask the court to set a firm date for the full protection hearing</li>
+        </ul>
+        <div class="tl-tip">✅ This is not the final hearing. It's temporary. Keep fighting. The full protection hearing is where the real case is made.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT NOT TO DO -->
+  <div class="dont-do" style="margin-top:4px">
+    <h3>❌ What NOT To Do After Removal</h3>
+    <div class="dont-list">
+      <div class="dont-item">Do NOT post about your case on social media — CAS monitors this and it can be used against you in court</div>
+      <div class="dont-item">Do NOT yell at, threaten, or harass CAS workers — this will be documented and used against you</div>
+      <div class="dont-item">Do NOT sign any CAS documents without your lawyer reviewing them first</div>
+      <div class="dont-item">Do NOT agree to a "voluntary" arrangement without understanding you are giving up court rights</div>
+      <div class="dont-item">Do NOT try to take your child back from placement without a court order — this is kidnapping</div>
+      <div class="dont-item">Do NOT miss access visits — missed visits are used as evidence against you</div>
+      <div class="dont-item">Do NOT speak to CAS about the case without your lawyer present</div>
+      <div class="dont-item">Do NOT ignore CAS letters or court dates — missing deadlines loses rights</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+    <a href="analyzer.html" class="btn btn-gold btn-lg">⚖️ Analyze My Case with AI →</a>
+    <a href="lawyer.html" class="btn btn-navy">👨‍⚖️ Find a Lawyer</a>
+    <a href="evidence.html" class="btn btn-outline">📁 Build Evidence File</a>
+  </div>
+
+</main>
+
+<script src="shared.js"></script>
+<script>OPD.init('emergency');</script>
+</body>
+</html>
