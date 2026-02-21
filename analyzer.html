@@ -244,7 +244,7 @@ async function testKey(){
   btn.disabled=true;btn.textContent='⏳ Checking...';
   st.className='api-status checking';st.textContent='⏳ Verifying with Google...';
   try{
-    var r=await fetch('https://generativelanguage.googleapis.com/v1beta/models?key='+key);
+    const r = await fetch('https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash?key='+key);
     btn.disabled=false;btn.textContent='Connect →';
     if(r.status===200){verifiedKey=key;st.className='api-status ok';st.textContent='✓ Connected! Google Gemini is ready to analyze your case for free.';}
     else if(r.status===400||r.status===403){verifiedKey='';st.className='api-status err';st.textContent='✗ Invalid API key. Get your free key at aistudio.google.com/app/apikey';}
