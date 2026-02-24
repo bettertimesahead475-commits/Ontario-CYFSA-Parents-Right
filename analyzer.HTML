@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent CYFSA Analyzer</title>
+<style>
+body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f7f7f7; line-height:1.6;}
+header {background:#333; color:#fff; text-align:center; padding:1.5rem;}
+h1,h2 {margin:0.5rem 0;}
+section {padding:2rem; max-width:800px; margin:auto;}
+form {text-align:center; margin:2rem 0;}
+input[type="file"] {margin-bottom:1rem;}
+button {padding:0.5rem 1rem; font-size:1rem; margin-top:0.5rem;}
+pre {background:#eee; padding:1rem; max-width:800px; margin:auto; overflow-x:auto;}
+a.btn {display:inline-block; margin-top:1rem; padding:0.5rem 1rem; background:#007BFF; color:white; text-decoration:none; border-radius:5px;}
+footer {text-align:center; padding:1rem; background:#333; color:#fff; margin-top:2rem;}
+#paymentNotice {background:#fffae6; border:1px solid #ffd700; padding:1rem; margin:1rem 0; text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Parent CYFSA Document Analyzer</h1>
+<p>Upload your CYFSA/family court documents for a step-by-step summary and checklist.</p>
+</header>
+
+<section>
+<h2>Upload Your Document</h2>
+<p>Supports PDF files.</p>
+<div id="paymentNotice">Free users see partial analysis. Subscribe for full results and PDF download.</div>
+
+<form id="uploadForm">
+<input type="file" id="docFile" accept=".pdf"/>
+<button type="submit">Analyze</button>
+</form>
+
+<h2>Results:</h2>
+<pre id="output"></pre>
+<button id="downloadPDF" style="display:none;">Download PDF Summary</button>
+
+<h2>Subscribe for Full Access</h2>
+<p><a href="https://gumroad.com/l/yourproduct" target="_blank" class="btn">Subscribe Now</a></p>
+
+<h2>Resources / Affiliate Links</h2>
+<ul>
+<li><a href="https://www.amazon.ca/dp/B09LEGALBOOK" target="_blank">Legal Prep Guide for Parents</a></li>
+<li><a href="https://www.amazon.ca/dp/B09FORMS" target="_blank">Court Form Templates</a></li>
+</ul>
+</section>
+
+<footer>
+<p>&copy; 2026 CYFSA Parent Analyzer</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.225/pdf.min.js"></script>
+<script>
+window.pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.225/pdf.worker.min.js";
+
+// Replace with your OpenAI key (or use serverless endpoint)
+const OPENAI_KEY = "YOUR_API_KEY_HERE";
+
+// Free tier flag: true = free user, false = paid
+let isFreeUser = true; 
+
+let lastSummary = "";
+
+document.getElementById('uploadForm').onsubmit = async e => {
+    e.preventDefault();
+    const file = document.getElementById('docFile').files[0];
+    if (!file) { alert("Select a PDF file"); return; }
+
+    const output = document.getElementById('output');
+    output.textContent = "Analyzing...";
+
+    try {
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const typedArray = new Uint8Array(reader.result);
+            const loadingTask = pdfjsLib.getDocument(typedArray);
+            const pdf = await loadingTask.promise;
+            let text = "";
+            for (let i=1;i<=pdf.numPages;i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                text += content.items.map(i=>i.str).join(" ") + "\n";
+            }
+
+            let prompt = `You are an educational assistant for Ontario parents.
+Analyze this document and return JSON with:
+1. Key dates
+2. Missing sections or evidence
+3. Step-by-step educational suggestions
+Document:
+${text}`;
+
+            // Free users only get partial output
+            if(isFreeUser) {
+                prompt += "\nReturn ONLY key dates and first 2 steps.";
+            }
+
+            const res = await fetch("https://api.openai.com/v1/chat/completions", {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":`Bearer ${OPENAI_KEY}`
+                },
+                body: JSON.stringify({
+                    model:"gpt-4o-mini",
+                    messages:[{role:"user", content:prompt}],
+                    temperature:0
+                })
+            });
+
+            const data = await res.json();
+            const summary = data.choices[0].message.content;
+            output.textContent = summary;
+            lastSummary = summary;
+
+            // Show PDF download only for paid users
+            if(!isFreeUser) {
+                document.getElementById('downloadPDF').style.display="inline-block";
+            } else {
+                document.getElementById('downloadPDF').style.display="none";
+            }
+
+        };
+        reader.readAsArrayBuffer(file);
+    } catch(err) {
+        output.textContent = "Error analyzing document: " + err;
+    }
+};
+
+// PDF Download
+document.getElementById('downloadPDF').onclick = () => {
+    if(!lastSummary) return;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    const lines = lastSummary.split("\n");
+    lines.forEach((line, i) => doc.text(line, 10, 10 + i*10));
+    doc.save("CYFSA_Summary.pdf");
+};
+</script>
+</body>
+</html>
